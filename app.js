@@ -17,10 +17,10 @@ const seekerSchema = new mongoose.Schema({
         min: [30, 'too young lol'],
         max: [169, 'how are you alive!']
     },
-    // email : {
-    //     type: String,
-    //     required: true
-    // },
+    email : {
+        type: String,
+        required: true
+    },
     username : {
         type: String,
         required: true
@@ -59,10 +59,10 @@ const seekerSchema = new mongoose.Schema({
         type: Number,
         default: 10
     },
-    seeks : {
-        type: Number,
-        default: 0
-    }
+    // seeks : {
+    //     type: Number,
+    //     default: 0
+    // }
 });
 
 
@@ -73,7 +73,7 @@ const seeker = new Seeker ({
     fname: "test",
     lname: "Kasai",
     age: 50,
-    // email: "kasai@gmail.com",
+    email: "kasai@gmail.com",
     username: "kasaitest",
     password: "behenchod",
     phoneno: "1234567890",
@@ -158,7 +158,7 @@ const volunteer = new Volunteer ({
     city: "Lahore"
 });
 
-volunteer.save();
+// volunteer.save();
 
 
 // Fruit.insertMany([kiwi, orange, banana], function(err){
