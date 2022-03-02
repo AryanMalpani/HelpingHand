@@ -1,0 +1,50 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+userSchema = new Schema( {
+	fname : {
+        type: String,
+        // required: true
+    },
+    lname : {
+        type: String,
+        // required: true
+    },
+    age : {
+        type: Number,
+        // required: true,
+        min: [30, 'too young lol'],
+        max: [169, 'how are you alive!']
+    },
+    email : {
+        type: String,
+        // required: true
+    },
+    username : {
+        type: String,
+        required: true
+    },
+    password : {
+        type: String,
+        required: true
+    },
+    phoneno : {
+        type: String,
+        // required: true,
+        minLength: 8,
+        maxLength: 10
+    },
+    city : {
+        type: String,
+        // required: true
+    },
+	role : {
+		type: Number,
+		required: true,
+		minLength: 0,
+		maxLength: 2
+	}
+}),
+user = mongoose.model('user', userSchema);
+
+module.exports = user;
