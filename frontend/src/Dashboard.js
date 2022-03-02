@@ -120,7 +120,7 @@ export default class Dashboard extends Component {
   addRequest = () => {
     const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
-    file.append('file', fileInput.files[0]);
+    // file.append('file', fileInput.files[0]);
     file.append('name', this.state.name);
     file.append('desc', this.state.desc);
     file.append('discount', this.state.discount);
@@ -216,7 +216,7 @@ export default class Dashboard extends Component {
       desc: data.desc,
       price: data.price,
       discount: data.discount,
-      fileName: data.image
+      // fileName: data.image
     });
   };
 
@@ -305,7 +305,7 @@ export default class Dashboard extends Component {
             <input
                 id="standard-basic"
                 type="file"
-                accept="image/*"
+                // accept="image/*"
                 name="file"
                 value={this.state.file}
                 onChange={this.onChange}
@@ -378,7 +378,7 @@ export default class Dashboard extends Component {
               placeholder="Discount"
               required
             /><br /><br />
-            <Button
+            {/* <Button
               variant="contained"
               component="label"
             > Upload
@@ -386,9 +386,9 @@ export default class Dashboard extends Component {
                 id="standard-basic"
                 type="file"
                 accept="image/*"
-                // inputProps={{
-                //   accept: "image/*"
-                // }}
+                inputProps={{
+                  accept: "image/*"
+                }}
                 name="file"
                 value={this.state.file}
                 onChange={this.onChange}
@@ -397,7 +397,7 @@ export default class Dashboard extends Component {
                 hidden
                 required
               />
-            </Button>&nbsp;
+            </Button>&nbsp; */}
             {this.state.fileName}
           </DialogContent>
 
@@ -430,7 +430,7 @@ export default class Dashboard extends Component {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Image</TableCell>
+                {/* <TableCell align="center">Image</TableCell> */}
                 <TableCell align="center">Description</TableCell>
                 <TableCell align="center">Price</TableCell>
                 <TableCell align="center">Discount</TableCell>
@@ -443,7 +443,7 @@ export default class Dashboard extends Component {
                   <TableCell align="center" component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell>
+                  {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
                   <TableCell align="center">{row.price}</TableCell>
                   <TableCell align="center">{row.discount}</TableCell>

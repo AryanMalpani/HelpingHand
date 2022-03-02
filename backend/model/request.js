@@ -3,9 +3,10 @@ var Schema = mongoose.Schema;
 
 requestSchema = new Schema( {
 	name: String,
+	starttime: Date,
 	desc: String,
 	price: Number,
-	image: String,
+	// image: String,
 	discount: Number,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },
