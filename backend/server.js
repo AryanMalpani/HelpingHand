@@ -117,7 +117,7 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   try {
     console.log(req.body)
-    if (req.body && req.body.username && req.body.password && req.body.role &&  role && fname && lname && age && email && phoneno) {
+    if (req.body && req.body.username && req.body.password && req.body.role && req.body.fname && req.body.lname && req.body.age && req.body.email && req.body.phoneno) {
 
       user.find({ username: req.body.username }, (err, data) => {
 
@@ -126,7 +126,12 @@ app.post("/register", (req, res) => {
           let User = new user({
             username: req.body.username,
             password: req.body.password,
-            role: req.body.role
+            role: req.body.role,
+            fname: req.body.fname,
+            lname: req.body.lname,
+            age: req.body.age,
+            email: req.body.email,
+            phoneno: req.body.phoneno
           });
           User.save((err, data) => {
             if (err) {
