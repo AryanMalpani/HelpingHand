@@ -18,7 +18,7 @@ export default class Dashboard extends Component {
       id: '',
       name: '',
       desc: '',
-      price: '',
+      type: '',
       starttime: '',
       file: '',
       fileName: '',
@@ -124,7 +124,7 @@ export default class Dashboard extends Component {
     file.append('name', this.state.name);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
-    file.append('price', this.state.price);
+    file.append('type', this.state.type);
 
     axios.post('http://localhost:2000/add-request', file, {
       headers: {
@@ -140,7 +140,7 @@ export default class Dashboard extends Component {
       });
 
       this.handleRequestClose();
-      this.setState({ name: '', desc: '', starttime: '', price: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -162,7 +162,7 @@ export default class Dashboard extends Component {
     file.append('name', this.state.name);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
-    file.append('price', this.state.price);
+    file.append('type', this.state.type);
 
     axios.post('http://localhost:2000/update-request', file, {
       headers: {
@@ -178,7 +178,7 @@ export default class Dashboard extends Component {
       });
 
       this.handleRequestEditClose();
-      this.setState({ name: '', desc: '', starttime: '', price: '', file: null }, () => {
+      this.setState({ name: '', desc: '', starttime: '', type: '', file: null }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -198,7 +198,7 @@ export default class Dashboard extends Component {
       id: '',
       name: '',
       desc: '',
-      price: '',
+      type: '',
       starttime: '',
       fileName: ''
     });
@@ -214,7 +214,7 @@ export default class Dashboard extends Component {
       id: data._id,
       name: data.name,
       desc: data.desc,
-      price: data.price,
+      type: data.type,
       starttime: data.starttime,
       // fileName: data.image
     });
@@ -278,7 +278,7 @@ export default class Dashboard extends Component {
               placeholder="Description"
               required
             /><br />
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="number"
               autoComplete="off"
@@ -286,6 +286,16 @@ export default class Dashboard extends Component {
               value={this.state.price}
               onChange={this.onChange}
               placeholder="Price"
+              required
+            /><br /> */}
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="type"
+              value={this.state.type}
+              onChange={this.onChange}
+              placeholder="Type"
               required
             /><br />
             <TextField
@@ -322,7 +332,7 @@ export default class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.starttime == '' || this.state.price == ''}
+              disabled={this.state.name == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
               onClick={(e) => this.updateRequest()} color="primary" autoFocus>
               Edit Request
             </Button>
@@ -358,7 +368,7 @@ export default class Dashboard extends Component {
               placeholder="Description"
               required
             /><br />
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="number"
               autoComplete="off"
@@ -366,6 +376,16 @@ export default class Dashboard extends Component {
               value={this.state.price}
               onChange={this.onChange}
               placeholder="Price"
+              required
+            /><br /> */}
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="type"
+              value={this.state.type}
+              onChange={this.onChange}
+              placeholder="Type"
               required
             /><br />
             <TextField
@@ -406,7 +426,7 @@ export default class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.starttime == '' || this.state.price == '' || this.state.file == null}
+              disabled={this.state.name == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == '' || this.state.file == null}
               onClick={(e) => this.addRequest()} color="primary" autoFocus>
               Add Request
             </Button>
@@ -432,7 +452,7 @@ export default class Dashboard extends Component {
                 <TableCell align="center">Name</TableCell>
                 {/* <TableCell align="center">Image</TableCell> */}
                 <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Price</TableCell>
+                <TableCell align="center">Type</TableCell>
                 <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
@@ -445,7 +465,7 @@ export default class Dashboard extends Component {
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
+                  <TableCell align="center">{row.type}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
                     <Button

@@ -5,7 +5,7 @@ requestSchema = new Schema( {
 	name: String,
 	starttime: Date,
 	desc: String,
-	price: Number,
+	type: String,
 	// image: String,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },
