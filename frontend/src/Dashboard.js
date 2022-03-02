@@ -16,10 +16,10 @@ export default class Dashboard extends Component {
       openRequestModal: false,
       openRequestEditModal: false,
       id: '',
-      name: '',
+      title: '',
       desc: '',
-      price: '',
-      discount: '',
+      type: '',
+      starttime: '',
       file: '',
       fileName: '',
       page: 1,
@@ -118,13 +118,13 @@ export default class Dashboard extends Component {
   };
 
   addRequest = () => {
-    const fileInput = document.querySelector("#fileInput");
+    // const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     // file.append('file', fileInput.files[0]);
-    file.append('name', this.state.name);
+    file.append('title', this.state.title);
     file.append('desc', this.state.desc);
-    file.append('discount', this.state.discount);
-    file.append('price', this.state.price);
+    file.append('starttime', this.state.starttime);
+    file.append('type', this.state.type);
 
     axios.post('http://localhost:2000/add-request', file, {
       headers: {
@@ -140,7 +140,7 @@ export default class Dashboard extends Component {
       });
 
       this.handleRequestClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null, page: 1 }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -159,10 +159,10 @@ export default class Dashboard extends Component {
     const file = new FormData();
     file.append('id', this.state.id);
     file.append('file', fileInput.files[0]);
-    file.append('name', this.state.name);
+    file.append('title', this.state.title);
     file.append('desc', this.state.desc);
-    file.append('discount', this.state.discount);
-    file.append('price', this.state.price);
+    file.append('starttime', this.state.starttime);
+    file.append('type', this.state.type);
 
     axios.post('http://localhost:2000/update-request', file, {
       headers: {
@@ -178,7 +178,7 @@ export default class Dashboard extends Component {
       });
 
       this.handleRequestEditClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -196,11 +196,10 @@ export default class Dashboard extends Component {
     this.setState({
       openRequestModal: true,
       id: '',
-      name: '',
+      title: '',
       desc: '',
-      price: '',
-      discount: '',
-      fileName: ''
+      type: '',
+      starttime: ''
     });
   };
 
@@ -212,10 +211,10 @@ export default class Dashboard extends Component {
     this.setState({
       openRequestEditModal: true,
       id: data._id,
-      name: data.name,
+      title: data.title,
       desc: data.desc,
-      price: data.price,
-      discount: data.discount,
+      type: data.type,
+      starttime: data.starttime,
       // fileName: data.image
     });
   };
@@ -229,7 +228,7 @@ export default class Dashboard extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Dashboard</h2>
+          <h2>Seeker Dashboard</h2>
           <Button
             className="button_style"
             variant="contained"
@@ -262,10 +261,10 @@ export default class Dashboard extends Component {
               id="standard-basic"
               type="text"
               autoComplete="off"
-              name="name"
-              value={this.state.name}
+              name="title"
+              value={this.state.title}
               onChange={this.onChange}
-              placeholder="Request Name"
+              placeholder="Request title"
               required
             /><br />
             <TextField
@@ -278,7 +277,7 @@ export default class Dashboard extends Component {
               placeholder="Description"
               required
             /><br />
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="number"
               autoComplete="off"
@@ -287,15 +286,25 @@ export default class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Price"
               required
+            /><br /> */}
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="type"
+              value={this.state.type}
+              onChange={this.onChange}
+              placeholder="Type"
+              required
             /><br />
             <TextField
               id="standard-basic"
-              type="number"
+              type="datetime-local"
               autoComplete="off"
-              name="discount"
-              value={this.state.discount}
+              name="starttime"
+              value={this.state.starttime}
               onChange={this.onChange}
-              placeholder="Discount"
+              placeholder="Start Time"
               required
             /><br /><br />
             <Button
@@ -322,7 +331,7 @@ export default class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == ''}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
               onClick={(e) => this.updateRequest()} color="primary" autoFocus>
               Edit Request
             </Button>
@@ -342,10 +351,10 @@ export default class Dashboard extends Component {
               id="standard-basic"
               type="text"
               autoComplete="off"
-              name="name"
-              value={this.state.name}
+              name="title"
+              value={this.state.title}
               onChange={this.onChange}
-              placeholder="Request Name"
+              placeholder="Request title"
               required
             /><br />
             <TextField
@@ -358,7 +367,7 @@ export default class Dashboard extends Component {
               placeholder="Description"
               required
             /><br />
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="number"
               autoComplete="off"
@@ -367,15 +376,25 @@ export default class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Price"
               required
+            /><br /> */}
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="type"
+              value={this.state.type}
+              onChange={this.onChange}
+              placeholder="Type"
+              required
             /><br />
             <TextField
               id="standard-basic"
-              type="number"
+              type="datetime-local"
               autoComplete="off"
-              name="discount"
-              value={this.state.discount}
+              name="starttime"
+              value={this.state.starttime}
               onChange={this.onChange}
-              placeholder="Discount"
+              placeholder="Start Time"
               required
             /><br /><br />
             {/* <Button
@@ -397,8 +416,8 @@ export default class Dashboard extends Component {
                 hidden
                 required
               />
-            </Button>&nbsp; */}
-            {this.state.fileName}
+            </Button>&nbsp;
+            {this.state.fileName} */}
           </DialogContent>
 
           <DialogActions>
@@ -406,7 +425,7 @@ export default class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' || this.state.file == null}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
               onClick={(e) => this.addRequest()} color="primary" autoFocus>
               Add Request
             </Button>
@@ -423,30 +442,30 @@ export default class Dashboard extends Component {
             name="search"
             value={this.state.search}
             onChange={this.onChange}
-            placeholder="Search by request name"
+            placeholder="Search by title"
             required
           />
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Name</TableCell>
+                <TableCell align="center">Title</TableCell>
                 {/* <TableCell align="center">Image</TableCell> */}
                 <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Price</TableCell>
-                <TableCell align="center">Discount</TableCell>
+                <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {this.state.requests.map((row) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.title}>
                   <TableCell align="center" component="th" scope="row">
-                    {row.name}
+                    {row.title}
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
-                  <TableCell align="center">{row.discount}</TableCell>
+                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
                     <Button
                       className="button_style"

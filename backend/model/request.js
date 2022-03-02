@@ -2,12 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 requestSchema = new Schema( {
-	name: String,
+	title: String,
 	starttime: Date,
 	desc: String,
-	price: Number,
+	type: String,
 	// image: String,
-	discount: Number,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },
 	date : { type : Date, default: Date.now }
