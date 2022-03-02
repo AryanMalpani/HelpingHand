@@ -28,6 +28,11 @@ export default class Register extends React.Component {
       username: this.state.username,
       password: this.state.password,
       role: this.state.role,
+      fname:this.state.fname,
+      lname:this.state.lname,
+      age:this.state.age,
+      email:this.state.email,
+      phoneno:this.state.phoneno
     }).then((res) => {
       swal({
         text: res.data.title,
