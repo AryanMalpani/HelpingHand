@@ -10,7 +10,13 @@ export default class Register extends React.Component {
       username: '',
       password: '',
       confirm_password: '',
-      role:''
+      role:'',
+      fname:'',
+      lname:'',
+      age:'',
+      email:'',
+      phoneno:'' //tel
+
     };
   }
 
@@ -59,6 +65,60 @@ export default class Register extends React.Component {
           <br /><br />
           <TextField
             id="standard-basic"
+            type="text"
+            autoComplete="off"
+            name="fname"
+            value={this.state.fname}
+            onChange={this.onChange}
+            placeholder="First Name"
+            required
+          />
+          <br /><br />
+          <TextField
+            id="standard-basic"
+            type="text"
+            autoComplete="off"
+            name="lname"
+            value={this.state.lname}
+            onChange={this.onChange}
+            placeholder="Last Name"
+            required
+          />
+          <TextField
+            id="standard-basic"
+            type="number"
+            autoComplete="off"
+            name="age"
+            value={this.state.age}
+            onChange={this.onChange}
+            placeholder="Your Age"
+            required
+          />
+          <br /><br />
+          <TextField
+            id="standard-basic"
+            type="email"
+            autoComplete="off"
+            name="email"
+            value={this.state.email}
+            onChange={this.onChange}
+            placeholder="Email"
+            required
+          />
+          <br /><br />
+          <TextField
+            id="standard-basic"
+            type="tel"
+            autoComplete="off"
+            name="phoneno"
+            value={this.state.phoneno}
+            onChange={this.onChange}
+            placeholder="Phone Number"
+            required
+          />
+          <br /><br />
+          <TextField
+            id="standard-basic"
             type="password"
             autoComplete="off"
             name="password"
@@ -68,6 +128,7 @@ export default class Register extends React.Component {
             required
           />
           <br /><br />
+          
           <TextField
             id="standard-basic"
             type="password"
