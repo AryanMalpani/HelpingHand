@@ -416,8 +416,8 @@ export default class Dashboard extends Component {
                 hidden
                 required
               />
-            </Button>&nbsp; */}
-            {this.state.fileName}
+            </Button>&nbsp;
+            {this.state.fileName} */}
           </DialogContent>
 
           <DialogActions>
@@ -425,7 +425,7 @@ export default class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == '' || this.state.file == null}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
               onClick={(e) => this.addRequest()} color="primary" autoFocus>
               Add Request
             </Button>
