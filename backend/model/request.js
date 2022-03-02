@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 requestSchema = new Schema( {
-	name: String,
+	title: String,
 	starttime: Date,
 	desc: String,
 	type: String,

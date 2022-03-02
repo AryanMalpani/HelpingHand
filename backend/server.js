@@ -195,11 +195,11 @@ function checkUserAndGenerateToken(data, req, res) {
 /* Api to add Request */
 app.post("/add-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
       req.body.starttime) {
 
       let new_request = new request();
-      new_request.name = req.body.name;
+      new_request.title = req.body.title;
       new_request.desc = req.body.desc;
       new_request.type = req.body.type;
       // new_request.image = req.files[0].filename;
@@ -236,7 +236,7 @@ app.post("/add-request", upload.any(), (req, res) => {
 /* Api to update Request */
 app.post("/update-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
       req.body.id && req.body.starttime) {
 
       request.findById(req.body.id, (err, new_request) => {
@@ -250,8 +250,8 @@ app.post("/update-request", upload.any(), (req, res) => {
         if (req.files && req.files[0] && req.files[0].filename) {
           new_request.image = req.files[0].filename;
         }
-        if (req.body.name) {
-          new_request.name = req.body.name;
+        if (req.body.title) {
+          new_request.title = req.body.title;
         }
         if (req.body.desc) {
           new_request.desc = req.body.desc;
@@ -324,7 +324,7 @@ app.post("/delete-request", (req, res) => {
   }
 });
 
-/*Api to get and search request with pagination and search by name*/
+/*Api to get and search request with pagination and search by title*/
 app.get("/get-request", (req, res) => {
   try {
     var query = {};
@@ -335,12 +335,12 @@ app.get("/get-request", (req, res) => {
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        name: { $regex: req.query.search }
+        title: { $regex: req.query.search }
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, name: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         request.find(query).count()
