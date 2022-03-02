@@ -118,7 +118,7 @@ export default class Dashboard extends Component {
   };
 
   addRequest = () => {
-    const fileInput = document.querySelector("#fileInput");
+    // const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     // file.append('file', fileInput.files[0]);
     file.append('title', this.state.title);
@@ -199,8 +199,7 @@ export default class Dashboard extends Component {
       title: '',
       desc: '',
       type: '',
-      starttime: '',
-      fileName: ''
+      starttime: ''
     });
   };
 
