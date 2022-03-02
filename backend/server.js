@@ -117,7 +117,7 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   try {
     console.log(req.body)
-    if (req.body && req.body.username && req.body.password && req.body.role) {
+    if (req.body && req.body.username && req.body.password && req.body.role &&  role && fname && lname && age && email && phoneno) {
 
       user.find({ username: req.body.username }, (err, data) => {
 
