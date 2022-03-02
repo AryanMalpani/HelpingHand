@@ -9,7 +9,7 @@ var multer = require('multer'),
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/SEDB");
 var fs = require('fs');
-var product = require("./model/product.js");
+var request = require("./model/request.js");
 var user = require("./model/user.js");
 
 var dir = './uploads';
@@ -40,6 +40,11 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: false
 }));
+
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerDocument = require('./swagger.json');
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/", (req, res, next) => {
   try {
@@ -187,20 +192,20 @@ function checkUserAndGenerateToken(data, req, res) {
   });
 }
 
-/* Api to add Product */
-app.post("/add-product", upload.any(), (req, res) => {
+/* Api to add Request */
+app.post("/add-request", upload.any(), (req, res) => {
   try {
     if (req.files && req.body && req.body.name && req.body.desc && req.body.price &&
       req.body.discount) {
 
-      let new_product = new product();
-      new_product.name = req.body.name;
-      new_product.desc = req.body.desc;
-      new_product.price = req.body.price;
-      new_product.image = req.files[0].filename;
-      new_product.discount = req.body.discount;
-      new_product.user_id = req.user.id;
-      new_product.save((err, data) => {
+      let new_request = new request();
+      new_request.name = req.body.name;
+      new_request.desc = req.body.desc;
+      new_request.price = req.body.price;
+      new_request.image = req.files[0].filename;
+      new_request.discount = req.body.discount;
+      new_request.user_id = req.user.id;
+      new_request.save((err, data) => {
         if (err) {
           res.status(400).json({
             errorMessage: err,
@@ -209,7 +214,7 @@ app.post("/add-product", upload.any(), (req, res) => {
         } else {
           res.status(200).json({
             status: true,
-            title: 'Product Added successfully.'
+            title: 'Request Added successfully.'
           });
         }
       });
@@ -228,37 +233,37 @@ app.post("/add-product", upload.any(), (req, res) => {
   }
 });
 
-/* Api to update Product */
-app.post("/update-product", upload.any(), (req, res) => {
+/* Api to update Request */
+app.post("/update-request", upload.any(), (req, res) => {
   try {
     if (req.files && req.body && req.body.name && req.body.desc && req.body.price &&
       req.body.id && req.body.discount) {
 
-      product.findById(req.body.id, (err, new_product) => {
+      request.findById(req.body.id, (err, new_request) => {
 
         // if file already exist than remove it
-        if (req.files && req.files[0] && req.files[0].filename && new_product.image) {
-          var path = `./uploads/${new_product.image}`;
+        if (req.files && req.files[0] && req.files[0].filename && new_request.image) {
+          var path = `./uploads/${new_request.image}`;
           fs.unlinkSync(path);
         }
 
         if (req.files && req.files[0] && req.files[0].filename) {
-          new_product.image = req.files[0].filename;
+          new_request.image = req.files[0].filename;
         }
         if (req.body.name) {
-          new_product.name = req.body.name;
+          new_request.name = req.body.name;
         }
         if (req.body.desc) {
-          new_product.desc = req.body.desc;
+          new_request.desc = req.body.desc;
         }
         if (req.body.price) {
-          new_product.price = req.body.price;
+          new_request.price = req.body.price;
         }
         if (req.body.discount) {
-          new_product.discount = req.body.discount;
+          new_request.discount = req.body.discount;
         }
 
-        new_product.save((err, data) => {
+        new_request.save((err, data) => {
           if (err) {
             res.status(400).json({
               errorMessage: err,
@@ -267,7 +272,7 @@ app.post("/update-product", upload.any(), (req, res) => {
           } else {
             res.status(200).json({
               status: true,
-              title: 'Product updated.'
+              title: 'Request updated.'
             });
           }
         });
@@ -288,15 +293,15 @@ app.post("/update-product", upload.any(), (req, res) => {
   }
 });
 
-/* Api to delete Product */
-app.post("/delete-product", (req, res) => {
+/* Api to delete Request */
+app.post("/delete-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      product.findByIdAndUpdate(req.body.id, { is_delete: true }, { new: true }, (err, data) => {
+      request.findByIdAndUpdate(req.body.id, { is_delete: true }, { new: true }, (err, data) => {
         if (data.is_delete) {
           res.status(200).json({
             status: true,
-            title: 'Product deleted.'
+            title: 'Request deleted.'
           });
         } else {
           res.status(400).json({
@@ -319,8 +324,8 @@ app.post("/delete-product", (req, res) => {
   }
 });
 
-/*Api to get and search product with pagination and search by name*/
-app.get("/get-product", (req, res) => {
+/*Api to get and search request with pagination and search by name*/
+app.get("/get-request", (req, res) => {
   try {
     var query = {};
     query["$and"] = [];
@@ -335,24 +340,24 @@ app.get("/get-product", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, desc: 1, price: 1, discount: 1, image: 1 })
+    request.find(query, { date: 1, name: 1, id: 1, desc: 1, price: 1, discount: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
-        product.find(query).count()
+        request.find(query).count()
           .then((count) => {
 
             if (data && data.length > 0) {
               res.status(200).json({
                 status: true,
-                title: 'Product retrived.',
-                products: data,
+                title: 'Request retrived.',
+                requests: data,
                 current_page: page,
                 total: count,
                 pages: Math.ceil(count / perPage),
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no product!',
+                errorMessage: 'There is no request!',
                 status: false
               });
             }

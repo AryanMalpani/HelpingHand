@@ -13,7 +13,7 @@ userSchema = new Schema( {
     age : {
         type: Number,
         // required: true,
-        min: [30, 'too young lol'],
+        // min: [40, 'too young lol'],
         max: [169, 'how are you alive!']
     },
     email : {
@@ -41,8 +41,8 @@ userSchema = new Schema( {
 	role : {
 		type: Number,
 		required: true,
-		minLength: 0,
-		maxLength: 2
+		min: 0,
+		max: 2
 	}
 }),
 user = mongoose.model('user', userSchema);
