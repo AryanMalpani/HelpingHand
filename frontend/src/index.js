@@ -5,15 +5,16 @@ import { BrowserRouter, Link } from 'react-router-dom';
 
 import Login from './Login';
 import Register from './Register';
-import Dashboard from './Dashboard';
+// import Dashboard from './SeekerDash';
 import './Login.css';
+import SeekerDash from './SeekerDash';
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path='/' component={Login} />
             <Route exact path='/register' component={Register} />
-            <Route path='/dashboard' component={Dashboard} />
+            <Route path='/seekerdash' component={SeekerDash} />
             {/* <Route component={NotFound}/> */}
         </Switch>
     </BrowserRouter>,

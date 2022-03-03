@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
 
-export default class Dashboard extends Component {
+export default class SeekerDash extends Component {
   constructor() {
     super();
     this.state = {
