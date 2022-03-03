@@ -25,15 +25,23 @@ export default class Login extends React.Component {
       password: pwd,
     }).then((res) => {
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user_id', res.data.id);
+      // localStorage.setItem('user_id', res.data.id);
       // localStorage.setItem('role', res.data.role);
-      // console.log(res.data.id);
+      console.log(res.data);
       // console.log(res.data.role);
 
-      // if (res.data.role == 1)
-      // {
+      if (res.data.role == 0)
+      {
+        this.props.history.push('/admindash');
+      }
+      if (res.data.role == 1)
+      {
         this.props.history.push('/seekerdash');
-      // }
+      }
+      if (res.data.role == 2)
+      {
+        this.props.history.push('/volunteerdash');
+      }
     }).catch((err) => {
       if (err.response && err.response.data && err.response.data.errorMessage) {
         swal({

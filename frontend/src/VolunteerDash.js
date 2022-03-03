@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
 
-export default class SeekerDash extends Component {
+export default class VolunteerDash extends Component {
   constructor() {
     super();
     this.state = {
@@ -228,7 +228,7 @@ export default class SeekerDash extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Seeker Dashboard</h2>
+          <h2>Volunteer Dashboard</h2>
           <Button
             className="button_style"
             variant="contained"

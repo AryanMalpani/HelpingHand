@@ -11,6 +11,7 @@ mongoose.connect("mongodb://localhost/SEDB");
 var fs = require('fs');
 var request = require("./model/request.js");
 var user = require("./model/user.js");
+const { getMaxListeners } = require("process");
 
 var dir = './uploads';
 var upload = multer({
@@ -191,6 +192,7 @@ function checkUserAndGenerateToken(data, req, res) {
       res.json({
         message: 'Login Successfully.',
         token: token,
+        role: data.role,
         status: true
       });
     }
@@ -209,7 +211,7 @@ app.post("/add-request", upload.any(), (req, res) => {
       new_request.type = req.body.type;
       // new_request.image = req.files[0].filename;
       new_request.starttime = req.body.starttime;
-      new_request.user_id = req.user.id;
+      new_request.seeker_id = req.user.id;
       new_request.save((err, data) => {
         if (err) {
           res.status(400).json({
@@ -330,13 +332,13 @@ app.post("/delete-request", (req, res) => {
 });
 
 /*Api to get and search request with pagination and search by title*/
-app.get("/get-request", (req, res) => {
+app.get("/seeker-get-request", (req, res) => {
   try {
     var query = {};
     query["$and"] = [];
     query["$and"].push({
       is_delete: false,
-      user_id: req.user.id
+      seeker_id: req.user.id
     });
     if (req.query && req.query.search) {
       query["$and"].push({

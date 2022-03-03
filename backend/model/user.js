@@ -42,7 +42,8 @@ userSchema = new Schema( {
 		type: Number,
 		required: true,
 		min: 0,
-		max: 2
+		max: 2,
+        default: 1
 	}
 }),
 user = mongoose.model('user', userSchema);
