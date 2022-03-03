@@ -50,7 +50,7 @@ export default class VolunteerDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/seeker-get-request${data}`, {
+    axios.get(`http://localhost:2000/volunteer-get-request${data}`, {
       headers: {
         'token': this.state.token
       }
@@ -117,80 +117,80 @@ export default class VolunteerDash extends Component {
     }
   };
 
-  addRequest = () => {
-    // const fileInput = document.querySelector("#fileInput");
-    const file = new FormData();
-    // file.append('file', fileInput.files[0]);
-    file.append('title', this.state.title);
-    file.append('desc', this.state.desc);
-    file.append('starttime', this.state.starttime);
-    file.append('type', this.state.type);
+//   addRequest = () => {
+//     // const fileInput = document.querySelector("#fileInput");
+//     const file = new FormData();
+//     // file.append('file', fileInput.files[0]);
+//     file.append('title', this.state.title);
+//     file.append('desc', this.state.desc);
+//     file.append('starttime', this.state.starttime);
+//     file.append('type', this.state.type);
 
-    axios.post('http://localhost:2000/add-request', file, {
-      headers: {
-        'content-type': 'multipart/form-data',
-        'token': this.state.token
-      }
-    }).then((res) => {
+//     axios.post('http://localhost:2000/add-request', file, {
+//       headers: {
+//         'content-type': 'multipart/form-data',
+//         'token': this.state.token
+//       }
+//     }).then((res) => {
 
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
-      });
+//       swal({
+//         text: res.data.title,
+//         icon: "success",
+//         type: "success"
+//       });
 
-      this.handleRequestClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
-        this.getRequest();
-      });
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-      this.handleRequestClose();
-    });
+//       this.handleRequestClose();
+//       this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
+//         this.getRequest();
+//       });
+//     }).catch((err) => {
+//       swal({
+//         text: err.response.data.errorMessage,
+//         icon: "error",
+//         type: "error"
+//       });
+//       this.handleRequestClose();
+//     });
 
-  }
+//   }
 
-  updateRequest = () => {
-    const fileInput = document.querySelector("#fileInput");
-    const file = new FormData();
-    file.append('id', this.state.id);
-    file.append('file', fileInput.files[0]);
-    file.append('title', this.state.title);
-    file.append('desc', this.state.desc);
-    file.append('starttime', this.state.starttime);
-    file.append('type', this.state.type);
+//   updateRequest = () => {
+//     const fileInput = document.querySelector("#fileInput");
+//     const file = new FormData();
+//     file.append('id', this.state.id);
+//     file.append('file', fileInput.files[0]);
+//     file.append('title', this.state.title);
+//     file.append('desc', this.state.desc);
+//     file.append('starttime', this.state.starttime);
+//     file.append('type', this.state.type);
 
-    axios.post('http://localhost:2000/update-request', file, {
-      headers: {
-        'content-type': 'multipart/form-data',
-        'token': this.state.token
-      }
-    }).then((res) => {
+//     axios.post('http://localhost:2000/update-request', file, {
+//       headers: {
+//         'content-type': 'multipart/form-data',
+//         'token': this.state.token
+//       }
+//     }).then((res) => {
 
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
-      });
+//       swal({
+//         text: res.data.title,
+//         icon: "success",
+//         type: "success"
+//       });
 
-      this.handleRequestEditClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
-        this.getRequest();
-      });
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-      this.handleRequestEditClose();
-    });
+//       this.handleRequestEditClose();
+//       this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
+//         this.getRequest();
+//       });
+//     }).catch((err) => {
+//       swal({
+//         text: err.response.data.errorMessage,
+//         icon: "error",
+//         type: "error"
+//       });
+//       this.handleRequestEditClose();
+//     });
 
-  }
+//   }
 
   handleRequestOpen = () => {
     this.setState({
@@ -229,7 +229,7 @@ export default class VolunteerDash extends Component {
         {this.state.loading && <LinearProgress size={40} />}
         <div>
           <h2>Volunteer Dashboard</h2>
-          <Button
+          {/* <Button
             className="button_style"
             variant="contained"
             color="primary"
@@ -237,7 +237,7 @@ export default class VolunteerDash extends Component {
             onClick={this.handleRequestOpen}
           >
             Add Request
-          </Button>
+          </Button> */}
           <Button
             className="button_style"
             variant="contained"
@@ -248,189 +248,7 @@ export default class VolunteerDash extends Component {
           </Button>
         </div>
 
-        {/* Edit Request */}
-        <Dialog
-          open={this.state.openRequestEditModal}
-          onClose={this.handleRequestClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Edit Request</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="title"
-              value={this.state.title}
-              onChange={this.onChange}
-              placeholder="Request title"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
-            {/* <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="price"
-              value={this.state.price}
-              onChange={this.onChange}
-              placeholder="Price"
-              required
-            /><br /> */}
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="type"
-              value={this.state.type}
-              onChange={this.onChange}
-              placeholder="Type"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="datetime-local"
-              autoComplete="off"
-              name="starttime"
-              value={this.state.starttime}
-              onChange={this.onChange}
-              placeholder="Start Time"
-              required
-            /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                // accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={this.handleRequestEditClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
-              onClick={(e) => this.updateRequest()} color="primary" autoFocus>
-              Edit Request
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        {/* Add Request */}
-        <Dialog
-          open={this.state.openRequestModal}
-          onClose={this.handleRequestClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Add Request</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="title"
-              value={this.state.title}
-              onChange={this.onChange}
-              placeholder="Request title"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
-            {/* <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="price"
-              value={this.state.price}
-              onChange={this.onChange}
-              placeholder="Price"
-              required
-            /><br /> */}
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="type"
-              value={this.state.type}
-              onChange={this.onChange}
-              placeholder="Type"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="datetime-local"
-              autoComplete="off"
-              name="starttime"
-              value={this.state.starttime}
-              onChange={this.onChange}
-              placeholder="Start Time"
-              required
-            /><br /><br />
-            {/* <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                accept="image/*"
-                inputProps={{
-                  accept: "image/*"
-                }}
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-                required
-              />
-            </Button>&nbsp;
-            {this.state.fileName} */}
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={this.handleRequestClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
-              onClick={(e) => this.addRequest()} color="primary" autoFocus>
-              Add Request
-            </Button>
-          </DialogActions>
-        </Dialog>
+        
 
         <br />
 
@@ -467,7 +285,7 @@ export default class VolunteerDash extends Component {
                   <TableCell align="center">{row.type}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
-                    <Button
+                    {/* <Button
                       className="button_style"
                       variant="outlined"
                       color="primary"
@@ -475,15 +293,15 @@ export default class VolunteerDash extends Component {
                       onClick={(e) => this.handleRequestEditOpen(row)}
                     >
                       Edit
-                  </Button>
+                  </Button> */}
                     <Button
                       className="button_style"
                       variant="outlined"
-                      color="secondary"
+                      color="success"
                       size="small"
-                      onClick={(e) => this.deleteRequest(row._id)}
+                    //   onClick={(e) => this.deleteRequest(row._id)}
                     >
-                      Delete
+                      Accept
                   </Button>
                   </TableCell>
                 </TableRow>

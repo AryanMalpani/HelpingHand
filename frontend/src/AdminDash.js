@@ -50,7 +50,7 @@ export default class AdminDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/seeker-get-request${data}`, {
+    axios.get(`http://localhost:2000/admin-get-request${data}`, {
       headers: {
         'token': this.state.token
       }
