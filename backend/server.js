@@ -499,6 +499,62 @@ app.get("/admin-get-request", (req, res) => {
 
 });
 
+/*Api to get and search users with pagination and search by title for admin*/
+app.get("/admin-get-user", (req, res) => {
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      // seeker_id: req.user.id
+    });
+    if (req.query && req.query.search) {
+      query["$and"].push({
+        title: { $regex: req.query.search }
+      });
+    }
+    var perPage = 5;
+    var page = req.query.page || 1;
+    user.find(query, {})
+      .skip((perPage * page) - perPage).limit(perPage)
+      .then((data) => {
+        user.find(query).count()
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              console.log(data)
+              console.log(data[0])
+              res.status(200).json({
+                status: true,
+                title: 'user retrived.',
+                users: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'There is no user!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
 });
