@@ -7,7 +7,7 @@ import {
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
-
+ 
 export default class VolunteerDash extends Component {
   constructor() {
     super();
@@ -20,6 +20,7 @@ export default class VolunteerDash extends Component {
       desc: '',
       type: '',
       starttime: '',
+      seekername:'',
       file: '',
       fileName: '',
       page: 1,
@@ -29,7 +30,7 @@ export default class VolunteerDash extends Component {
       loading: false
     };
   }
-
+ 
   componentDidMount = () => {
     let token = localStorage.getItem('token');
     if (!token) {
@@ -40,11 +41,11 @@ export default class VolunteerDash extends Component {
       });
     }
   }
-
+ 
   getRequest = () => {
     
     this.setState({ loading: true });
-
+ 
     let data = '?';
     data = `${data}page=${this.state.page}`;
     if (this.state.search) {
@@ -54,7 +55,7 @@ export default class VolunteerDash extends Component {
       headers: {
         'token': this.state.token
       }
-    }).then((res) => {
+    }).then((res) => {console.log(res.data.requests[0].seeker_id.username)
       this.setState({ loading: false, requests: res.data.requests, pages: res.data.pages });
     }).catch((err) => {
       swal({
@@ -65,7 +66,7 @@ export default class VolunteerDash extends Component {
       this.setState({ loading: false, requests: [], pages: 0 },()=>{});
     });
   }
-
+ 
   acceptRequest = (id) => {
     axios.post('http://localhost:2000/accept-request', {
       id: id
@@ -75,13 +76,13 @@ export default class VolunteerDash extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-
+ 
       swal({
         text: res.data.title,
         icon: "success",
         type: "success"
       });
-
+ 
       this.setState({ page: 1 }, () => {
         this.pageChange(null, 1);
       });
@@ -93,18 +94,18 @@ export default class VolunteerDash extends Component {
       });
     });
   }
-
+ 
   pageChange = (e, page) => {
     this.setState({ page: page }, () => {
       this.getRequest();
     });
   }
-
+ 
   logOut = () => {
     localStorage.setItem('token', null);
     this.props.history.push('/');
   }
-
+ 
   onChange = (e) => {
     if (e.target.files && e.target.files[0] && e.target.files[0].name) {
       this.setState({ fileName: e.target.files[0].name }, () => { });
@@ -116,7 +117,7 @@ export default class VolunteerDash extends Component {
       });
     }
   };
-
+ 
 //   addRequest = () => {
 //     // const fileInput = document.querySelector("#fileInput");
 //     const file = new FormData();
@@ -125,20 +126,20 @@ export default class VolunteerDash extends Component {
 //     file.append('desc', this.state.desc);
 //     file.append('starttime', this.state.starttime);
 //     file.append('type', this.state.type);
-
+ 
 //     axios.post('http://localhost:2000/add-request', file, {
 //       headers: {
 //         'content-type': 'multipart/form-data',
 //         'token': this.state.token
 //       }
 //     }).then((res) => {
-
+ 
 //       swal({
 //         text: res.data.title,
 //         icon: "success",
 //         type: "success"
 //       });
-
+ 
 //       this.handleRequestClose();
 //       this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
 //         this.getRequest();
@@ -151,9 +152,9 @@ export default class VolunteerDash extends Component {
 //       });
 //       this.handleRequestClose();
 //     });
-
+ 
 //   }
-
+ 
 //   updateRequest = () => {
 //     const fileInput = document.querySelector("#fileInput");
 //     const file = new FormData();
@@ -163,20 +164,20 @@ export default class VolunteerDash extends Component {
 //     file.append('desc', this.state.desc);
 //     file.append('starttime', this.state.starttime);
 //     file.append('type', this.state.type);
-
+ 
 //     axios.post('http://localhost:2000/update-request', file, {
 //       headers: {
 //         'content-type': 'multipart/form-data',
 //         'token': this.state.token
 //       }
 //     }).then((res) => {
-
+ 
 //       swal({
 //         text: res.data.title,
 //         icon: "success",
 //         type: "success"
 //       });
-
+ 
 //       this.handleRequestEditClose();
 //       this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
 //         this.getRequest();
@@ -189,9 +190,9 @@ export default class VolunteerDash extends Component {
 //       });
 //       this.handleRequestEditClose();
 //     });
-
+ 
 //   }
-
+ 
   handleRequestOpen = () => {
     this.setState({
       openRequestModal: true,
@@ -199,32 +200,36 @@ export default class VolunteerDash extends Component {
       title: '',
       desc: '',
       type: '',
-      starttime: ''
+      starttime: '',
+      seekername:''
     });
   };
-
+ 
   handleRequestClose = () => {
     this.setState({ openRequestModal: false });
   };
-
-  handleRequestEditOpen = (data) => {
-    this.setState({
-      openRequestEditModal: true,
-      id: data._id,
-      title: data.title,
-      desc: data.desc,
-      type: data.type,
-      starttime: data.starttime,
-      // fileName: data.image
-    });
-  };
-
+ 
+  // handleRequestEditOpen = (data) => {
+  //   this.setState({
+  //     openRequestEditModal: true,
+  //     id: data._id,
+  //     title: data.title,
+  //     desc: data.desc,
+  //     type: data.type,
+  //     starttime: data.starttime,
+  //     seekername : data.seeker_id.username
+      
+  //     fileName: data.image
+  //   });
+  // };
+ 
   handleRequestEditClose = () => {
     this.setState({ openRequestEditModal: false });
   };
-
+ 
   render() {
     return (
+      
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
@@ -247,11 +252,11 @@ export default class VolunteerDash extends Component {
             Log Out
           </Button>
         </div>
-
+ 
         
-
+ 
         <br />
-
+ 
         <TableContainer>
           <TextField
             id="standard-basic"
@@ -270,8 +275,12 @@ export default class VolunteerDash extends Component {
                 {/* <TableCell align="center">Image</TableCell> */}
                 <TableCell align="center">Description</TableCell>
                 <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Seeker Name</TableCell>
+                <TableCell align="center">Age</TableCell>
                 <TableCell align="center">Start Time</TableCell>
+                
                 <TableCell align="center">Action</TableCell>
+                
               </TableRow>
             </TableHead>
             <TableBody>
@@ -283,7 +292,10 @@ export default class VolunteerDash extends Component {
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
                   <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.seeker_id.username}</TableCell>
+                  <TableCell align="center">{row.seeker_id.age}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
+                  
                   <TableCell align="center">
                     {/* <Button
                       className="button_style"
@@ -311,7 +323,7 @@ export default class VolunteerDash extends Component {
           <br />
           <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
         </TableContainer>
-
+ 
       </div>
     );
   }
