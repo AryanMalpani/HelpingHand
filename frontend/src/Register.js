@@ -53,7 +53,7 @@ export default class Register extends React.Component {
     return (
       <div style={{ marginTop: '200px' }}>
         <div>
-          <h2>Register</h2>
+          <h2>Todo Register</h2>
         </div>
 
         <div>
