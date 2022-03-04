@@ -66,8 +66,8 @@ export default class VolunteerDash extends Component {
     });
   }
 
-  deleteRequest = (id) => {
-    axios.post('http://localhost:2000/delete-request', {
+  acceptRequest = (id) => {
+    axios.post('http://localhost:2000/accept-request', {
       id: id
     }, {
       headers: {
@@ -299,7 +299,7 @@ export default class VolunteerDash extends Component {
                       variant="outlined"
                       color="success"
                       size="small"
-                    //   onClick={(e) => this.deleteRequest(row._id)}
+                      onClick={(e) => this.acceptRequest(row._id)}
                     >
                       Accept
                   </Button>

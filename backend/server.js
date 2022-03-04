@@ -560,3 +560,35 @@ app.get("/admin-get-user", (req, res) => {
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
 });
+
+
+/* Api to accept Request */
+app.post("/accept-request", (req, res) => {
+  try {
+    if (req.body && req.body.id && req.user.id) {
+      request.findByIdAndUpdate(req.body.id, { volunteer_id: req.user.id }, { new: true }, (err, data) => {
+        if (data.volunteer_id != null) {
+          res.status(200).json({
+            status: true,
+            title: 'Request accepted.'
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
