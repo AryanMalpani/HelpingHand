@@ -394,6 +394,8 @@ app.get("/volunteer-get-request", (req, res) => {
     query["$and"] = [];
     query["$and"].push({
       is_delete: false,
+      is_complete: false,
+      volunteer_id: null
       // seeker_id: req.user.id
     });
     if (req.query && req.query.search) {
