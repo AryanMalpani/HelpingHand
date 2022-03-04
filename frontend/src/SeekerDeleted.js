@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
 
-export default class SeekerDash extends Component {
+export default class SeekerDeleted extends Component {
   constructor() {
     super();
     this.state = {
@@ -50,7 +50,7 @@ export default class SeekerDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/seeker-get-unaccepted-request${data}`, {
+    axios.get(`http://localhost:2000/seeker-get-deleted-request${data}`, {
       headers: {
         'token': this.state.token
       }
@@ -66,8 +66,8 @@ export default class SeekerDash extends Component {
     });
   }
 
-  deleteRequest = (id) => {
-    axios.post('http://localhost:2000/delete-request', {
+  reviveRequest = (id) => {
+    axios.post('http://localhost:2000/revive-request', {
       id: id
     }, {
       headers: {
@@ -228,7 +228,7 @@ export default class SeekerDash extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Seeker Dashboard</h2>
+          <h2>Deleted Requests</h2>
           <Button
             className="button_style"
             variant="contained"
@@ -479,11 +479,11 @@ export default class SeekerDash extends Component {
                     <Button
                       className="button_style"
                       variant="outlined"
-                      color="secondary"
+                      color="dark"
                       size="small"
-                      onClick={(e) => this.deleteRequest(row._id)}
+                      onClick={(e) => this.reviveRequest(row._id)}
                     >
-                      Delete
+                      Revive
                   </Button>
                   </TableCell>
                 </TableRow>

@@ -10,6 +10,7 @@ import './Login.css';
 import SeekerDash from './SeekerDash';
 import VolunteerDash from './VolunteerDash';
 import AdminDash from './AdminDash';
+import SeekerDeleted from './SeekerDeleted';
 
 ReactDOM.render(
     <BrowserRouter>
@@ -18,6 +19,7 @@ ReactDOM.render(
             <Route exact path='/login' component={Login} />
             <Route exact path='/register' component={Register} />
             <Route path='/seekerdash' component={SeekerDash} />
+            <Route path='/seekerdeleted' component={SeekerDeleted} />
             <Route path='/volunteerdash' component={VolunteerDash} />
             <Route path='/admindash' component={AdminDash} />
             {/* <Route component={NotFound}/> */}

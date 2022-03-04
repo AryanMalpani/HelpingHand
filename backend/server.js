@@ -331,14 +331,48 @@ app.post("/delete-request", (req, res) => {
   }
 });
 
+/* Api to revive Request */
+app.post("/revive-request", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      request.findByIdAndUpdate(req.body.id, { is_delete: false }, { new: true }, (err, data) => {
+        if (data.is_delete) {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Request revived.'
+          });
+          
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
 /*Api to get and search request with pagination and search by title for seeker*/
-app.get("/seeker-get-request", (req, res) => {
+app.get("/seeker-get-unaccepted-request", (req, res) => {
   try {
     var query = {};
     query["$and"] = [];
     query["$and"].push({
       is_delete: false,
-      seeker_id: req.user.id
+      seeker_id: req.user.id,
+      volunteer_id: null,
+      is_complete: false,
     });
     if (req.query && req.query.search) {
       query["$and"].push({
@@ -354,6 +388,122 @@ app.get("/seeker-get-request", (req, res) => {
           .then((count) => {
 
             if (data && data.length > 0) {
+              console.log(data)
+              res.status(200).json({
+                status: true,
+                title: 'Request retrived.',
+                requests: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'There is no request!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+/*Api to get and search accepted request with pagination and search by title for seeker*/
+app.get("/seeker-get-accepted-request", (req, res) => {
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      is_delete: false,
+      seeker_id: req.user.id,
+      volunteer_id: { $ne: null },
+      is_complete: false
+    });
+    if (req.query && req.query.search) {
+      query["$and"].push({
+        title: { $regex: req.query.search }
+      });
+    }
+    var perPage = 5;
+    var page = req.query.page || 1;
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
+      .skip((perPage * page) - perPage).limit(perPage)
+      .then((data) => {
+        request.find(query).count()
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: 'Request retrived.',
+                requests: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'There is no request!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+/*Api to get and search deleted request with pagination and search by title for seeker*/
+app.get("/seeker-get-deleted-request", (req, res) => {
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      is_delete: true,
+      seeker_id: req.user.id,
+      // volunteer_id: { $ne: null },
+      // is_complete: false
+    });
+    if (req.query && req.query.search) {
+      query["$and"].push({
+        title: { $regex: req.query.search }
+      });
+    }
+    var perPage = 5;
+    var page = req.query.page || 1;
+    request.find(query, {})
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('volunteer_id')
+      .then((data) => {
+        request.find(query).count()
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              console.log(data)
               res.status(200).json({
                 status: true,
                 title: 'Request retrived.',
@@ -559,4 +709,36 @@ app.get("/admin-get-user", (req, res) => {
 
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
+});
+
+
+/* Api to accept Request */
+app.post("/accept-request", (req, res) => {
+  try {
+    if (req.body && req.body.id && req.user.id) {
+      request.findByIdAndUpdate(req.body.id, { volunteer_id: req.user.id }, { new: true }, (err, data) => {
+        if (data.volunteer_id != null) {
+          res.status(200).json({
+            status: true,
+            title: 'Request accepted.'
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
 });
