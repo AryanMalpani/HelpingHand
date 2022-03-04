@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
+import Navbar from './components/Navbar';
 const axios = require('axios');
 
 export default class SeekerDash extends Component {
@@ -224,7 +225,8 @@ export default class SeekerDash extends Component {
   };
 
   render() {
-    return (
+    return (<>
+      <Navbar/>
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
@@ -318,7 +320,6 @@ export default class SeekerDash extends Component {
                 name="file"
                 value={this.state.file}
                 onChange={this.onChange}
-                id="fileInput"
                 placeholder="File"
                 hidden
               />
@@ -494,7 +495,7 @@ export default class SeekerDash extends Component {
           <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
         </TableContainer>
 
-      </div>
+      </div></>
     );
   }
 }
