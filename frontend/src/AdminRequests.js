@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
 
-export default class AdminDash extends Component {
+export default class AdminRequests extends Component {
   constructor() {
     super();
     this.state = {
@@ -228,7 +228,7 @@ export default class AdminDash extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Users</h2>
+          <h2>Requests</h2>
           <Button
             className="button_style"
             variant="contained"

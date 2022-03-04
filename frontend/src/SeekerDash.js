@@ -155,10 +155,10 @@ export default class SeekerDash extends Component {
   }
 
   updateRequest = () => {
-    const fileInput = document.querySelector("#fileInput");
+    // const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('file', fileInput.files[0]);
+    // file.append('file', fileInput.files[0]);
     file.append('title', this.state.title);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
@@ -307,23 +307,7 @@ export default class SeekerDash extends Component {
               placeholder="Start Time"
               required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                // accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>

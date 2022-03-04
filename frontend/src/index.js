@@ -9,8 +9,9 @@ import Register from './Register';
 import './Login.css';
 import SeekerDash from './SeekerDash';
 import VolunteerDash from './VolunteerDash';
-import AdminDash from './AdminDash';
+import AdminRequests from './AdminRequests';
 import SeekerDeleted from './SeekerDeleted';
+import AdminDash from './AdminDash';
 
 ReactDOM.render(
     <BrowserRouter>
@@ -21,6 +22,7 @@ ReactDOM.render(
             <Route path='/seekerdash' component={SeekerDash} />
             <Route path='/seekerdeleted' component={SeekerDeleted} />
             <Route path='/volunteerdash' component={VolunteerDash} />
+            <Route path='/adminrequests' component={AdminRequests} />
             <Route path='/admindash' component={AdminDash} />
             {/* <Route component={NotFound}/> */}
         </Switch>
