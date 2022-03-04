@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
 import { Button, TextField, Link } from '@material-ui/core';
+import "./rldesign.css";
+import ScriptTag from 'react-script-tag';
+
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
+
+const Demo = props => (
+  <ScriptTag type="text/javascript" src="rldesign.js" />
+  )
+
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -53,51 +61,75 @@ export default class Login extends React.Component {
     });
   }
 
-  render() {
-    return (
-      <div style={{ marginTop: '200px' }}>
-        <div>
-          <h2>Login</h2>
-        </div>
+  
 
-        <div>
-          <TextField
-            id="standard-basic"
-            type="text"
-            autoComplete="off"
-            name="username"
-            value={this.state.username}
-            onChange={this.onChange}
-            placeholder="User Name"
-            required
-          />
-          <br /><br />
-          <TextField
-            id="standard-basic"
-            type="password"
-            autoComplete="off"
-            name="password"
-            value={this.state.password}
-            onChange={this.onChange}
-            placeholder="Password"
-            required
-          />
-          <br /><br />
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            disabled={this.state.username == '' && this.state.password == ''}
-            onClick={this.login}
-          >
-            Login
-          </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <Link href="/register">
-            Register
-          </Link>
-        </div>
-      </div>
-    );
-  }
-}
+  render() {
+    return (<>
+      <section id="formHolder">
+
+      <div className="row">
+
+         
+         <div className="col-sm-6 brand">
+            <a href="#" className="logo">MR <span>.</span></a>
+
+            <div className="heading">
+               <h2>Marina</h2>
+               <p>Your Right Choice</p>
+            </div>
+
+            <div className="success-msg">
+               <p>Great! You are one of our members now</p>
+               <a href="#" className="profile">Your Profile</a>
+            </div>
+         </div>
+        {/*form box*/}
+         <div className="col-sm-6 form">
+
+         {/*<!-- Login Form -->*/}
+            <div className="login form-peice switched">
+               <form className="login-form" action="#" method="post">
+                  <div className="form-group">
+                     <label for="username">Username</label>
+                     <input type="text" name="username" id="username" value={this.state.username}
+                        onChange={this.onChange}
+                        placeholder="User Name" autoComplete="off" required/>
+                     </div>
+
+                  <div className="form-group">
+                     <label for="loginPassword">Password</label>
+                     <input type="password" id="loginPassword" autoComplete="off"
+                      name="password"
+                      value={this.state.password}
+                      onChange={this.onChange}
+                      placeholder="Password" required/>
+                     
+                  </div>
+
+                  <div className="CTA">
+                     <button type="submit" value="Login" disabled={this.state.username == '' && this.state.password == ''}
+                      onClick={this.login}>login</button>
+                     <a href="/register" className="switch">I'm New</a>
+                  </div>
+               </form>
+            </div>
+            
+
+          </div>
+          </div>
+          </section>
+          
+          </>
+          )
+        }}
+
+
+
+      
+          
+          
+            
+          
+          
+        
+    
