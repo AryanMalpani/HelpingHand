@@ -50,11 +50,12 @@ export default class AdminDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/admin-get-request${data}`, {
+    axios.get(`http://localhost:2000/admin-get-user${data}`, {
       headers: {
         'token': this.state.token
       }
     }).then((res) => {
+      console.log()
       this.setState({ loading: false, requests: res.data.requests, pages: res.data.pages });
     }).catch((err) => {
       swal({
@@ -432,12 +433,14 @@ export default class AdminDash extends Component {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Title</TableCell>
-                {/* <TableCell align="center">Image</TableCell> */}
-                <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Type</TableCell>
-                <TableCell align="center">Start Time</TableCell>
-                <TableCell align="center">Action</TableCell>
+                <TableCell align="center">First Name</TableCell>
+                <TableCell align="center">Last Name</TableCell>
+                <TableCell align="center">Age</TableCell>
+                <TableCell align="center">Email</TableCell>
+                <TableCell align="center">Username</TableCell>
+                <TableCell align="center">Phone Number</TableCell>
+                <TableCell align="center">City</TableCell>
+                <TableCell align="center">Role</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -447,9 +450,13 @@ export default class AdminDash extends Component {
                     {row.title}
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
-                  <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.type}</TableCell>
-                  <TableCell align="center">{row.starttime}</TableCell>
+                  <TableCell align="center">{row.fname}</TableCell>
+                  <TableCell align="center">{row.lname}</TableCell>
+                  <TableCell align="center">{row.age}</TableCell>
+                  <TableCell align="center">{row.email}</TableCell>
+                  <TableCell align="center">{row.username}</TableCell>
+                  <TableCell align="center">{row.city}</TableCell>
+                  <TableCell align="center">{row.role}</TableCell>
                   <TableCell align="center">
                     <Button
                       className="button_style"
