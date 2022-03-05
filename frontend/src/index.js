@@ -12,6 +12,7 @@ import VolunteerDash from './VolunteerDash';
 import AdminRequests from './AdminRequests';
 import SeekerDeleted from './SeekerDeleted';
 import AdminDash from './AdminDash';
+import VolunteerUpcoming from './VolunteerUpcoming';
 
 ReactDOM.render(
     <BrowserRouter>
@@ -22,6 +23,7 @@ ReactDOM.render(
             <Route path='/seekerdash' component={SeekerDash} />
             <Route path='/seekerdeleted' component={SeekerDeleted} />
             <Route path='/volunteerdash' component={VolunteerDash} />
+            <Route path='/volunteerupcoming' component={VolunteerUpcoming} />
             <Route path='/adminrequests' component={AdminRequests} />
             <Route path='/admindash' component={AdminDash} />
             {/* <Route component={NotFound}/> */}

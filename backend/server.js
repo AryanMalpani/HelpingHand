@@ -556,7 +556,67 @@ app.get("/volunteer-get-request", (req, res) => {
     var perPage = 5;
     var page = req.query.page || 1;
     request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id')
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
+      .then((data) => {
+        request.find(query).count()
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              console.log(data)
+              res.status(200).json({
+                status: true,
+                title: 'Request retrived.',
+                requests: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'There is no request!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+/*Api to get and search upcoming requests for that volunteers with pagination and search by title for volunteer*/
+app.get("/volunteer-get-my-upcoming-request", (req, res) => {
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      is_delete: false,
+      is_complete: false,
+      volunteer_id: req.user.id,
+      starttime: { $gte: Date.now()}
+
+      // seeker_id: req.user.id
+    });
+    if (req.query && req.query.search) {
+      query["$and"].push({
+        title: { $regex: req.query.search }
+      });
+    }
+    var perPage = 5;
+    var page = req.query.page || 1;
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -721,6 +781,37 @@ app.post("/accept-request", (req, res) => {
           res.status(200).json({
             status: true,
             title: 'Request accepted.'
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+/* Api to remove a volunteer from a request he has accepted*/
+app.post("/remove-volunteer-from-request", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      request.findByIdAndUpdate(req.body.id, { volunteer_id: null }, { new: true }, (err, data) => {
+        if (data.volunteer_id === null) {
+          res.status(200).json({
+            status: true,
+            title: 'Request deleted.'
           });
         } else {
           res.status(400).json({
