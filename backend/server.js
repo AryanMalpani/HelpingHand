@@ -671,7 +671,7 @@ app.get("/admin-get-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
+    request.find(query, {})
       .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('volunteer_id')
       .then((data) => {
         request.find(query).count()
@@ -811,6 +811,36 @@ app.post("/remove-volunteer-from-request", (req, res) => {
           res.status(200).json({
             status: true,
             title: 'Request deleted.'
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+app.post("/complete-request", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      request.findByIdAndUpdate(req.body.id, { is_complete: true }, { new: true }, (err, data) => {
+        if (data.is_complete) {
+          res.status(200).json({
+            status: true,
+            title: 'Request completed.'
           });
         } else {
           res.status(400).json({

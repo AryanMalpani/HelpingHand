@@ -94,6 +94,34 @@ export default class VolunteerUpcoming extends Component {
       });
     });
   }
+
+  completeRequest = (id) => {
+    axios.post('http://localhost:2000/complete-request', {
+      id: id
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': this.state.token
+      }
+    }).then((res) => {
+ 
+      swal({
+        text: res.data.title,
+        icon: "success",
+        type: "success"
+      });
+ 
+      this.setState({ page: 1 }, () => {
+        this.pageChange(null, 1);
+      });
+    }).catch((err) => {
+      swal({
+        text: err.response.data.errorMessage,
+        icon: "error",
+        type: "error"
+      });
+    });
+  }
  
   pageChange = (e, page) => {
     this.setState({ page: page }, () => {
@@ -308,6 +336,15 @@ export default class VolunteerUpcoming extends Component {
                     >
                       Edit
                   </Button> */}
+                  <Button
+                      className="button_style"
+                      variant="outlined"
+                      color="success"
+                      size="small"
+                      onClick={(e) => this.completeRequest(row._id)}
+                    >
+                      complete
+                  </Button>
                     <Button
                       className="button_style"
                       variant="outlined"
@@ -317,6 +354,7 @@ export default class VolunteerUpcoming extends Component {
                     >
                       remove
                   </Button>
+                  
                   </TableCell>
                 </TableRow>
               ))}
