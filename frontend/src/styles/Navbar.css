@@ -1,0 +1,19 @@
+.header {
+    display: flex;
+    gap: 3rem;
+    justify-content: flex-end;
+    padding: 1rem 2rem;
+    margin-bottom: 20px;
+    background-color: black;
+}
+
+a {
+    color: #d7dddf;
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: all 0.2s linear;
+}
+
+a:hover {
+    color: #ED1F24;
+}
