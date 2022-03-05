@@ -726,7 +726,7 @@ app.get("/admin-get-user", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    user.find(query, {})
+    user.find(query, {fname: 1, lname: 1, age: 1, email: 1, username: 1, phoneno: 1, city: 1, role: 1})
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         user.find(query).count()
@@ -734,7 +734,6 @@ app.get("/admin-get-user", (req, res) => {
 
             if (data && data.length > 0) {
               console.log(data)
-              console.log(data[0])
               res.status(200).json({
                 status: true,
                 title: 'user retrived.',
