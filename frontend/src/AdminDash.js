@@ -24,7 +24,7 @@ export default class AdminDash extends Component {
       fileName: '',
       page: 1,
       search: '',
-      requests: [],
+      users: [],
       pages: 0,
       loading: false
     };
@@ -55,15 +55,14 @@ export default class AdminDash extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-      console.log()
-      this.setState({ loading: false, requests: res.data.requests, pages: res.data.pages });
+      this.setState({ loading: false, users: res.data.users, pages: res.data.pages });
     }).catch((err) => {
       swal({
         text: err.response.data.errorMessage,
         icon: "error",
         type: "error"
       });
-      this.setState({ loading: false, requests: [], pages: 0 },()=>{});
+      this.setState({ loading: false, users: [], pages: 0 },()=>{});
     });
   }
 
@@ -441,20 +440,22 @@ export default class AdminDash extends Component {
                 <TableCell align="center">Phone Number</TableCell>
                 <TableCell align="center">City</TableCell>
                 <TableCell align="center">Role</TableCell>
+                <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.requests.map((row) => (
-                <TableRow key={row.title}>
-                  <TableCell align="center" component="th" scope="row">
+              {this.state.users.map((row) => (
+                <TableRow key={row.username}>
+                  {/* <TableCell align="center" component="th" scope="row">
                     {row.title}
-                  </TableCell>
+                  </TableCell> */}
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.fname}</TableCell>
                   <TableCell align="center">{row.lname}</TableCell>
                   <TableCell align="center">{row.age}</TableCell>
                   <TableCell align="center">{row.email}</TableCell>
                   <TableCell align="center">{row.username}</TableCell>
+                  <TableCell align="center">{row.phoneno}</TableCell>
                   <TableCell align="center">{row.city}</TableCell>
                   <TableCell align="center">{row.role}</TableCell>
                   <TableCell align="center">
