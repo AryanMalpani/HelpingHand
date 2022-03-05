@@ -311,7 +311,7 @@ export default class VolunteerUpcoming extends Component {
                     <Button
                       className="button_style"
                       variant="outlined"
-                      color="success"
+                      color="secondary"
                       size="small"
                       onClick={(e) => this.removeRequest(row._id)}
                     >
