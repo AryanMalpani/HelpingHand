@@ -7,6 +7,8 @@ const axios = require('axios');
 
 const styles = {
   fontSize: 14,
+  width: '12%',
+  fontSize: "20px"
 }
 
 export default class Register extends React.Component {
