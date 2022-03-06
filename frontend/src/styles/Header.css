@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    gap: 3rem;
+    justify-content: space-between;
+    justify-content: center;
+    padding: 1rem 2rem;
+    margin-bottom: 20px;
+    background-color: black;
+    box-shadow: 0px 1px 10px #555;
+}
+
+.link-div {
+    display: flex;
+    gap: 3rem;
+}
+
+a {
+    color: #d7dddf;
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: all 0.2s linear;
+}
+
+a:hover {
+    color: #ED1F24;
+}
