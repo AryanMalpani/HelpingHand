@@ -228,12 +228,14 @@ export default class SeekerDash extends Component {
 
   render() {
     return (<>
-      <Header/>
       <Sidebar/>
+      <Header/>
+      
+
       <div>
         {this.state.loading && <LinearProgress size={40} />}
-        <div>
-          <h2>Seeker Dashboard</h2>
+        <div style={{marginTop: '4rem'}}>
+          <h2 style={{marginBottom:'1rem'}}>Seeker Dashboard</h2>
           <Button
             className="button_style"
             variant="contained"
@@ -449,7 +451,7 @@ export default class SeekerDash extends Component {
             placeholder="Search by title"
             required
           />
-          <Table aria-label="simple table">
+          <Table aria-label="simple table" style={{marginTop:'3rem'}}>
             <TableHead>
               <TableRow>
                 <TableCell align="center">Title</TableCell>
@@ -495,7 +497,7 @@ export default class SeekerDash extends Component {
             </TableBody>
           </Table>
           <br />
-          <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
+          <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" style={{display: 'flex',justifyContent:'center'}} />
         </TableContainer>
 
       </div></>

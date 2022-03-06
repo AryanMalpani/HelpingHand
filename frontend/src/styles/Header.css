@@ -1,10 +1,16 @@
 .header {
     display: flex;
     gap: 3rem;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 1rem 2rem;
     margin-bottom: 20px;
     background-color: black;
+    box-shadow: 0px 1px 10px #555;
+}
+
+.link-div {
+    display: flex;
+    gap: 3rem;
 }
 
 a {
