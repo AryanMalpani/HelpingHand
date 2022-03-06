@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import swal from 'sweetalert';
 import { Button, TextField, Link } from '@material-ui/core';
 import validator from 'validator' 
-const axios = require('axios'); 
+const axios = require('axios');
 
 
+const styles = {
+  fontSize: 14,
+}
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -16,7 +19,7 @@ export default class Register extends React.Component {
       role:'',
       fname:'',
       lname:'',
-      age:'',
+      age:null,
       email:'',
       phoneno:'' //tel
 
@@ -34,22 +37,19 @@ export default class Register extends React.Component {
     const isValidPass = validator.equals(pass, cpass)
     return (isValidPass)
   }
-  // validateAge = (Age) => {
-  //   if(Age<0){
-  //     return false
-  //   }
-  //   else if(typeof(Age)!== Number){
-  //     return false
-  //   }
-  //   else{
-  //     return true
-  //   }
-  // }
+  validateAge = (age) => {
+    if(age>=0 && typeof(age)=== Number){
+      return true
+    }
+    else{
+      return false
+    }
+  }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
   
   register = () => {
-    if(this.validatePhoneNumber(this.state.phoneno) && this.validateEmail(this.state.email) && this.validatePass(this.state.password, this.state.confirm_password)){
+    if(this.validatePhoneNumber(this.state.phoneno) && this.validateEmail(this.state.email) && this.validatePass(this.state.password, this.state.confirm_password) && this.validateAge(this.state.age)){
     
       // && this.validateAge(this.state.age)
     axios.post('http://localhost:2000/register', {
@@ -86,21 +86,36 @@ export default class Register extends React.Component {
     if(!this.validatePass(this.state.password, this.state.confirm_password)){
       alert("Password and Confirm password don't match")
     }
-    // if(this.validateAge(this.state.age)===false){
-    //   alert("Age entered is not valid")
-    // }
+    if(this.validateAge(this.state.age)===false){
+      alert("Age entered is not valid")
+    }
     
   }
   }
 
   render() {
     return (
-      <div style={{ marginTop: '200px' }}>
+      <div style={{ marginTop: '150px' }}>
         <div>
           <h2>Register</h2>
         </div>
 
         <div>
+        <select required name='role' id='selectList'
+          onChange={this.onChange}
+          style={styles}
+          type="number">
+            <option value="" disabled selected hidden>
+              Select role
+            </option>
+            <option value = "1">
+              Seeker
+            </option>
+            <option value = "2">
+              Helper
+            </option>
+          </select>
+          <br /><br />
           <TextField
             id="standard-basic"
             type="text"
@@ -133,6 +148,7 @@ export default class Register extends React.Component {
             placeholder="Last Name"
             required
           />
+          <br /><br />
           <TextField
             id="standard-basic"
             type="number"
@@ -188,19 +204,7 @@ export default class Register extends React.Component {
             placeholder="Confirm Password"
             required
           />
-          <select required name='role' id='selectList'
-          onChange={this.onChange}
-          type="number">
-            <option value="" disabled selected hidden>
-              Select role
-            </option>
-            <option value = "1">
-              Seeker
-            </option>
-            <option value = "2">
-              Helper
-            </option>
-          </select>
+          
           <br /><br />
           <Button
             className="button_style"
