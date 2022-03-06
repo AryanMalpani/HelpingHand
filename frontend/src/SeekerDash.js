@@ -22,12 +22,14 @@ export default class SeekerDash extends Component {
       title: '',
       desc: '',
       type: '',
+      type_id: '',
       starttime: '',
       file: '',
       fileName: '',
       page: 1,
       search: '',
       requests: [],
+      types: [],
       pages: 0,
       loading: false
     };
@@ -48,6 +50,8 @@ export default class SeekerDash extends Component {
     
     this.setState({ loading: true });
 
+    
+
     let data = '?';
     data = `${data}page=${this.state.page}`;
     if (this.state.search) {
@@ -58,7 +62,9 @@ export default class SeekerDash extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-      this.setState({ loading: false, requests: res.data.requests, pages: res.data.pages });
+      // console.log(res.data.types[0].typename)
+      this.setState({ loading: false, requests: res.data.requests, types: res.data.types, pages: res.data.pages });
+      // console.log(this.state.types[0]._id)
     }).catch((err) => {
       swal({
         text: err.response.data.errorMessage,
@@ -109,10 +115,12 @@ export default class SeekerDash extends Component {
   }
 
   onChange = (e) => {
-    if (e.target.files && e.target.files[0] && e.target.files[0].name) {
-      this.setState({ fileName: e.target.files[0].name }, () => { });
-    }
+    
+    // if (e.target.files && e.target.files[0] && e.target.files[0].name) {
+    //   this.setState({ fileName: e.target.files[0].name }, () => { });
+    // }
     this.setState({ [e.target.name]: e.target.value }, () => { });
+    console.log(this.state.type_id)
     if (e.target.name == 'search') {
       this.setState({ page: 1 }, () => {
         this.getRequest();
@@ -127,7 +135,7 @@ export default class SeekerDash extends Component {
     file.append('title', this.state.title);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
-    file.append('type', this.state.type);
+    file.append('type_id', this.state.type_id);
 
     axios.post('http://localhost:2000/add-request', file, {
       headers: {
@@ -143,7 +151,7 @@ export default class SeekerDash extends Component {
       });
 
       this.handleRequestClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type_id: '', page: 1 }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -158,14 +166,14 @@ export default class SeekerDash extends Component {
   }
 
   updateRequest = () => {
-    const fileInput = document.querySelector("#fileInput");
+    // const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('file', fileInput.files[0]);
+    // file.append('file', fileInput.files[0]);
     file.append('title', this.state.title);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
-    file.append('type', this.state.type);
+    file.append('type_id', this.state.type_id);
 
     axios.post('http://localhost:2000/update-request', file, {
       headers: {
@@ -181,7 +189,7 @@ export default class SeekerDash extends Component {
       });
 
       this.handleRequestEditClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type_id: ''}, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -201,7 +209,7 @@ export default class SeekerDash extends Component {
       id: '',
       title: '',
       desc: '',
-      type: '',
+      type_id: '',
       starttime: ''
     });
   };
@@ -216,7 +224,7 @@ export default class SeekerDash extends Component {
       id: data._id,
       title: data.title,
       desc: data.desc,
-      type: data.type,
+      type_id: data.type_id._id,
       starttime: data.starttime,
       // fileName: data.image
     });
@@ -294,7 +302,7 @@ export default class SeekerDash extends Component {
               placeholder="Price"
               required
             /><br /> */}
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="text"
               autoComplete="off"
@@ -303,7 +311,33 @@ export default class SeekerDash extends Component {
               onChange={this.onChange}
               placeholder="Type"
               required
-            /><br />
+            /><br /> */}
+
+
+
+<select required name='type_id' id='selectList'
+          onChange={this.onChange}
+          type="text"
+          // value = {this.state.type_id}
+          >
+
+<option value={this.state.type_id._id} hidden>
+              Select type
+            </option>
+
+{this.state.types.map((type) => (
+            
+            <option value = {type._id}>
+            {type.typename}
+            </option>
+            ))}
+
+          </select><br></br>
+
+
+
+
+
             <TextField
               id="standard-basic"
               type="datetime-local"
@@ -314,22 +348,7 @@ export default class SeekerDash extends Component {
               placeholder="Start Time"
               required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                // accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>
@@ -337,7 +356,7 @@ export default class SeekerDash extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type_id == ''}
               onClick={(e) => this.updateRequest()} color="primary" autoFocus>
               Edit Request
             </Button>
@@ -383,7 +402,7 @@ export default class SeekerDash extends Component {
               placeholder="Price"
               required
             /><br /> */}
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="text"
               autoComplete="off"
@@ -392,7 +411,29 @@ export default class SeekerDash extends Component {
               onChange={this.onChange}
               placeholder="Type"
               required
-            /><br />
+            /><br /> */}
+
+
+<select required name='type_id' id='selectList'
+          onChange={this.onChange}
+          type="text"
+          // value = {this.state.type_id}
+          >
+
+<option value="" disabled selected hidden>
+              Select type
+            </option>
+
+{this.state.types.map((type) => (
+            
+            <option value = {type._id}>
+            {type.typename}
+            </option>
+            ))}
+
+          </select>
+
+
             <TextField
               id="standard-basic"
               type="datetime-local"
@@ -431,7 +472,7 @@ export default class SeekerDash extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type_id == ''}
               onClick={(e) => this.addRequest()} color="primary" autoFocus>
               Add Request
             </Button>
@@ -470,7 +511,7 @@ export default class SeekerDash extends Component {
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.type_id.typename}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
                     <Button

@@ -178,7 +178,7 @@ export default class SeekerDeleted extends Component {
       });
 
       this.handleRequestEditClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type_id: '', file: null }, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -307,23 +307,6 @@ export default class SeekerDeleted extends Component {
               placeholder="Start Time"
               required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                // accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
           </DialogContent>
 
           <DialogActions>
@@ -464,7 +447,7 @@ export default class SeekerDeleted extends Component {
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.type_id.typename}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
                     <Button

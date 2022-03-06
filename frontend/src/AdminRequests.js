@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
 
-export default class AdminDash extends Component {
+export default class AdminRequests extends Component {
   constructor() {
     super();
     this.state = {
@@ -24,7 +24,7 @@ export default class AdminDash extends Component {
       fileName: '',
       page: 1,
       search: '',
-      users: [],
+      requests: [],
       pages: 0,
       loading: false
     };
@@ -50,19 +50,19 @@ export default class AdminDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/admin-get-user${data}`, {
+    axios.get(`http://localhost:2000/admin-get-request${data}`, {
       headers: {
         'token': this.state.token
       }
     }).then((res) => {
-      this.setState({ loading: false, users: res.data.users, pages: res.data.pages });
+      this.setState({ loading: false, requests: res.data.requests, pages: res.data.pages });
     }).catch((err) => {
       swal({
         text: err.response.data.errorMessage,
         icon: "error",
         type: "error"
       });
-      this.setState({ loading: false, users: [], pages: 0 },()=>{});
+      this.setState({ loading: false, requests: [], pages: 0 },()=>{});
     });
   }
 
@@ -228,7 +228,7 @@ export default class AdminDash extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Users</h2>
+          <h2>Requests</h2>
           <Button
             className="button_style"
             variant="contained"
@@ -432,32 +432,24 @@ export default class AdminDash extends Component {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">First Name</TableCell>
-                <TableCell align="center">Last Name</TableCell>
-                <TableCell align="center">Age</TableCell>
-                <TableCell align="center">Email</TableCell>
-                <TableCell align="center">Username</TableCell>
-                <TableCell align="center">Phone Number</TableCell>
-                <TableCell align="center">City</TableCell>
-                <TableCell align="center">Role</TableCell>
+                <TableCell align="center">Title</TableCell>
+                {/* <TableCell align="center">Image</TableCell> */}
+                <TableCell align="center">Description</TableCell>
+                <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.users.map((row) => (
-                <TableRow key={row.username}>
-                  {/* <TableCell align="center" component="th" scope="row">
+              {this.state.requests.map((row) => (
+                <TableRow key={row.title}>
+                  <TableCell align="center" component="th" scope="row">
                     {row.title}
-                  </TableCell> */}
+                  </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
-                  <TableCell align="center">{row.fname}</TableCell>
-                  <TableCell align="center">{row.lname}</TableCell>
-                  <TableCell align="center">{row.age}</TableCell>
-                  <TableCell align="center">{row.email}</TableCell>
-                  <TableCell align="center">{row.username}</TableCell>
-                  <TableCell align="center">{row.phoneno}</TableCell>
-                  <TableCell align="center">{row.city}</TableCell>
-                  <TableCell align="center">{row.role}</TableCell>
+                  <TableCell align="center">{row.desc}</TableCell>
+                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
                     <Button
                       className="button_style"

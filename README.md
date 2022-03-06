@@ -1,5 +1,5 @@
 # Helper App
-Simlple example of user registration, login and CRUD action with backend restAPI using mongoDB, Nodejs(Express.js) and mongoose, authentication using JWT token also pagination and frontend using react.js and material-ui api calling with axios.
+A webapp that connects aged people in need of help with volunteers willing to help them
 
 [![flow](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/development/MERN.gif)](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/development/MERN.gif)
 

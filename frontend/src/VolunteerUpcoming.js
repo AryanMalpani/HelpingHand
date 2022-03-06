@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
  
-export default class VolunteerDash extends Component {
+export default class VolunteerUpcoming extends Component {
   constructor() {
     super();
     this.state = {
@@ -51,7 +51,7 @@ export default class VolunteerDash extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/volunteer-get-request${data}`, {
+    axios.get(`http://localhost:2000/volunteer-get-my-upcoming-request${data}`, {
       headers: {
         'token': this.state.token
       }
@@ -67,8 +67,36 @@ export default class VolunteerDash extends Component {
     });
   }
  
-  acceptRequest = (id) => {
-    axios.post('http://localhost:2000/accept-request', {
+  removeRequest = (id) => {
+    axios.post('http://localhost:2000/remove-volunteer-from-request', {
+      id: id
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': this.state.token
+      }
+    }).then((res) => {
+ 
+      swal({
+        text: res.data.title,
+        icon: "success",
+        type: "success"
+      });
+ 
+      this.setState({ page: 1 }, () => {
+        this.pageChange(null, 1);
+      });
+    }).catch((err) => {
+      swal({
+        text: err.response.data.errorMessage,
+        icon: "error",
+        type: "error"
+      });
+    });
+  }
+
+  completeRequest = (id) => {
+    axios.post('http://localhost:2000/complete-request', {
       id: id
     }, {
       headers: {
@@ -233,7 +261,7 @@ export default class VolunteerDash extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Volunteer Dashboard</h2>
+          <h2>My Upcoming Requests</h2>
           {/* <Button
             className="button_style"
             variant="contained"
@@ -277,6 +305,7 @@ export default class VolunteerDash extends Component {
                 <TableCell align="center">Type</TableCell>
                 <TableCell align="center">Seeker Name</TableCell>
                 <TableCell align="center">Age</TableCell>
+                <TableCell align="center">Contact no.</TableCell>
                 <TableCell align="center">Start Time</TableCell>
                 
                 <TableCell align="center">Action</TableCell>
@@ -294,6 +323,7 @@ export default class VolunteerDash extends Component {
                   <TableCell align="center">{row.type_id.typename}</TableCell>
                   <TableCell align="center">{row.seeker_id.fname +" "+ row.seeker_id.lname}</TableCell>
                   <TableCell align="center">{row.seeker_id.age}</TableCell>
+                  <TableCell align="center">{row.seeker_id.phoneno}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   
                   <TableCell align="center">
@@ -306,15 +336,25 @@ export default class VolunteerDash extends Component {
                     >
                       Edit
                   </Button> */}
-                    <Button
+                  <Button
                       className="button_style"
                       variant="outlined"
                       color="success"
                       size="small"
-                      onClick={(e) => this.acceptRequest(row._id)}
+                      onClick={(e) => this.completeRequest(row._id)}
                     >
-                      Accept
+                      complete
                   </Button>
+                    <Button
+                      className="button_style"
+                      variant="outlined"
+                      color="secondary"
+                      size="small"
+                      onClick={(e) => this.removeRequest(row._id)}
+                    >
+                      remove
+                  </Button>
+                  
                   </TableCell>
                 </TableRow>
               ))}
