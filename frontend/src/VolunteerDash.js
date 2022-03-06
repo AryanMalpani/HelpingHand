@@ -291,7 +291,7 @@ export default class VolunteerDash extends Component {
                   </TableCell>
                   {/* <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell> */}
                   <TableCell align="center">{row.desc}</TableCell>
-                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.type_id.typename}</TableCell>
                   <TableCell align="center">{row.seeker_id.fname +" "+ row.seeker_id.lname}</TableCell>
                   <TableCell align="center">{row.seeker_id.age}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
