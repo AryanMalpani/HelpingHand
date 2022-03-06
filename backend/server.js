@@ -524,7 +524,7 @@ app.get("/seeker-get-deleted-request", (req, res) => {
     var perPage = 5;
     var page = req.query.page || 1;
     request.find(query, {})
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('volunteer_id')
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').populate('volunteer_id')
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -582,8 +582,8 @@ app.get("/volunteer-get-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -642,8 +642,9 @@ app.get("/volunteer-get-my-upcoming-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id')
+      .sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
