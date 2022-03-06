@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
 import { Button, TextField, Link } from '@material-ui/core';
-const axios = require('axios');
+import validator from 'validator' 
+const axios = require('axios'); 
+
+
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -19,11 +22,36 @@ export default class Register extends React.Component {
 
     };
   }
+  validatePhoneNumber = (number) => {
+    const isValidPhoneNumber = validator.isMobilePhone(number)
+    return (isValidPhoneNumber)
+  }
+  validateEmail = (email) => {
+    const isValidEmail = validator.isEmail(email)
+    return (isValidEmail)
+  }
+  validatePass = (pass, cpass) => {
+    const isValidPass = validator.equals(pass, cpass)
+    return (isValidPass)
+  }
+  // validateAge = (Age) => {
+  //   if(Age<0){
+  //     return false
+  //   }
+  //   else if(typeof(Age)!== Number){
+  //     return false
+  //   }
+  //   else{
+  //     return true
+  //   }
+  // }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
-
+  
   register = () => {
-
+    if(this.validatePhoneNumber(this.state.phoneno) && this.validateEmail(this.state.email) && this.validatePass(this.state.password, this.state.confirm_password)){
+    
+      // && this.validateAge(this.state.age)
     axios.post('http://localhost:2000/register', {
       username: this.state.username,
       password: this.state.password,
@@ -47,6 +75,22 @@ export default class Register extends React.Component {
         type: "error"
       });
     });
+  }
+  else{
+    if(!this.validatePhoneNumber(this.state.phoneno)){
+      alert("Enter correct phone number")
+    }
+    if(!this.validateEmail(this.state.email)){
+      alert("Enter correct email")
+    }
+    if(!this.validatePass(this.state.password, this.state.confirm_password)){
+      alert("Password and Confirm password don't match")
+    }
+    // if(this.validateAge(this.state.age)===false){
+    //   alert("Age entered is not valid")
+    // }
+    
+  }
   }
 
   render() {
@@ -163,7 +207,7 @@ export default class Register extends React.Component {
             variant="contained"
             color="primary"
             size="small"
-            disabled={this.state.username == '' && this.state.password == '' && this.state.role ==''}
+            disabled={this.state.username === '' && this.state.password === '' && this.state.role ===''}
             onClick={this.register}
           >
             Register
