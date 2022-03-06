@@ -11,6 +11,7 @@ mongoose.connect("mongodb://localhost/SEDB");
 var fs = require('fs');
 var request = require("./model/request.js");
 var user = require("./model/user.js");
+var type = require("./model/type.js");
 const { getMaxListeners } = require("process");
 
 var dir = './uploads';
@@ -202,13 +203,16 @@ function checkUserAndGenerateToken(data, req, res) {
 /* Api to add Request */
 app.post("/add-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
       req.body.starttime) {
+
+        console.log(req.body);
+        console.log(req.user)
 
       let new_request = new request();
       new_request.title = req.body.title;
       new_request.desc = req.body.desc;
-      new_request.type = req.body.type;
+      new_request.type_id = req.body.type_id;
       // new_request.image = req.files[0].filename;
       new_request.starttime = req.body.starttime;
       new_request.seeker_id = req.user.id;
@@ -243,8 +247,10 @@ app.post("/add-request", upload.any(), (req, res) => {
 /* Api to update Request */
 app.post("/update-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
       req.body.id && req.body.starttime) {
+
+        console.log(req.body)
 
       request.findById(req.body.id, (err, new_request) => {
 
@@ -263,8 +269,8 @@ app.post("/update-request", upload.any(), (req, res) => {
         if (req.body.desc) {
           new_request.desc = req.body.desc;
         }
-        if (req.body.type) {
-          new_request.type = req.body.type;
+        if (req.body.type_id) {
+          new_request.type_id = req.body.type_id;
         }
         if (req.body.starttime) {
           new_request.starttime = req.body.starttime;
@@ -374,25 +380,44 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
       volunteer_id: null,
       is_complete: false,
     });
+
+
+    // let new_type = new type();
+    //   new_type.typename = "Pick And Drop";
+
+    // new_type.save();
+
+
+    
+    
+
     if (req.query && req.query.search) {
       query["$and"].push({
         title: { $regex: req.query.search }
       });
     }
+
+    type.find()
+    .then((typesdata) =>{
+      
+    
+
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
-      .skip((perPage * page) - perPage).limit(perPage)
+    request.find(query, {type: 0})
+      .skip((perPage * page) - perPage).limit(perPage).populate('type_id')
       .then((data) => {
         request.find(query).count()
           .then((count) => {
 
-            if (data && data.length > 0) {
+            if (data) {
               console.log(data)
+              console.log(typesdata)
               res.status(200).json({
                 status: true,
                 title: 'Request retrived.',
                 requests: data,
+                types: typesdata,
                 current_page: page,
                 total: count,
                 pages: Math.ceil(count / perPage),
@@ -412,6 +437,8 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
           status: false
         });
       });
+
+    });
   } catch (e) {
     res.status(400).json({
       errorMessage: 'Something went wrong!',
@@ -497,7 +524,7 @@ app.get("/seeker-get-deleted-request", (req, res) => {
     var perPage = 5;
     var page = req.query.page || 1;
     request.find(query, {})
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('volunteer_id')
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').populate('volunteer_id')
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -555,8 +582,8 @@ app.get("/volunteer-get-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -615,8 +642,9 @@ app.get("/volunteer-get-my-upcoming-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').sort({starttime: 1})
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id')
+      .sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
