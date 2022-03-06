@@ -11,6 +11,7 @@ mongoose.connect("mongodb://localhost/SEDB");
 var fs = require('fs');
 var request = require("./model/request.js");
 var user = require("./model/user.js");
+var type = require("./model/type.js");
 const { getMaxListeners } = require("process");
 
 var dir = './uploads';
@@ -374,25 +375,44 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
       volunteer_id: null,
       is_complete: false,
     });
+
+
+    // let new_type = new type();
+    //   new_type.typename = "Pick And Drop";
+
+    // new_type.save();
+
+
+    
+    
+
     if (req.query && req.query.search) {
       query["$and"].push({
         title: { $regex: req.query.search }
       });
     }
+
+    type.find()
+    .then((typesdata) =>{
+      
+    
+
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
-      .skip((perPage * page) - perPage).limit(perPage)
+    request.find(query, {type: 0})
+      .skip((perPage * page) - perPage).limit(perPage).populate('type_id')
       .then((data) => {
         request.find(query).count()
           .then((count) => {
 
             if (data && data.length > 0) {
               console.log(data)
+              console.log(typesdata)
               res.status(200).json({
                 status: true,
                 title: 'Request retrived.',
                 requests: data,
+                types: typesdata,
                 current_page: page,
                 total: count,
                 pages: Math.ceil(count / perPage),
@@ -412,6 +432,8 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
           status: false
         });
       });
+
+    });
   } catch (e) {
     res.status(400).json({
       errorMessage: 'Something went wrong!',

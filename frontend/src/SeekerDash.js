@@ -140,7 +140,7 @@ export default class SeekerDash extends Component {
       });
 
       this.handleRequestClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type: '', page: 1 }, () => {
         this.getRequest();
       });
     }).catch((err) => {
