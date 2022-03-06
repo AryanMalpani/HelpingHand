@@ -8,7 +8,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 import Navbar from './components/Header';
 import Header from './components/Header';
-import Sidebar from './components/Sidebar';
+//import Sidebar from './components/Sidebar';
 const axios = require('axios');
 
 export default class SeekerDash extends Component {
@@ -228,7 +228,7 @@ export default class SeekerDash extends Component {
 
   render() {
     return (<>
-      <Sidebar/>
+      
       <Header/>
       
 
