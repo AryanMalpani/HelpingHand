@@ -117,7 +117,7 @@ export default class SeekerDash extends Component {
     //   this.setState({ fileName: e.target.files[0].name }, () => { });
     // }
     this.setState({ [e.target.name]: e.target.value }, () => { });
-    // console.log(this.state.type_id)
+    console.log(this.state.type_id)
     if (e.target.name == 'search') {
       this.setState({ page: 1 }, () => {
         this.getRequest();
@@ -170,7 +170,7 @@ export default class SeekerDash extends Component {
     file.append('title', this.state.title);
     file.append('desc', this.state.desc);
     file.append('starttime', this.state.starttime);
-    file.append('type', this.state.type);
+    file.append('type_id', this.state.type_id);
 
     axios.post('http://localhost:2000/update-request', file, {
       headers: {
@@ -186,7 +186,7 @@ export default class SeekerDash extends Component {
       });
 
       this.handleRequestEditClose();
-      this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
+      this.setState({ title: '', desc: '', starttime: '', type_id: ''}, () => {
         this.getRequest();
       });
     }).catch((err) => {
@@ -206,7 +206,7 @@ export default class SeekerDash extends Component {
       id: '',
       title: '',
       desc: '',
-      type: '',
+      type_id: '',
       starttime: ''
     });
   };
@@ -221,7 +221,7 @@ export default class SeekerDash extends Component {
       id: data._id,
       title: data.title,
       desc: data.desc,
-      type: data.type,
+      type_id: data.type_id._id,
       starttime: data.starttime,
       // fileName: data.image
     });
@@ -295,7 +295,7 @@ export default class SeekerDash extends Component {
               placeholder="Price"
               required
             /><br /> */}
-            <TextField
+            {/* <TextField
               id="standard-basic"
               type="text"
               autoComplete="off"
@@ -304,7 +304,33 @@ export default class SeekerDash extends Component {
               onChange={this.onChange}
               placeholder="Type"
               required
-            /><br />
+            /><br /> */}
+
+
+
+<select required name='type_id' id='selectList'
+          onChange={this.onChange}
+          type="text"
+          // value = {this.state.type_id}
+          >
+
+<option value={this.state.type_id._id} hidden>
+              Select type
+            </option>
+
+{this.state.types.map((type) => (
+            
+            <option value = {type._id}>
+            {type.typename}
+            </option>
+            ))}
+
+          </select><br></br>
+
+
+
+
+
             <TextField
               id="standard-basic"
               type="datetime-local"
@@ -323,7 +349,7 @@ export default class SeekerDash extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
+              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type_id == ''}
               onClick={(e) => this.updateRequest()} color="primary" autoFocus>
               Edit Request
             </Button>
@@ -384,7 +410,6 @@ export default class SeekerDash extends Component {
 <select required name='type_id' id='selectList'
           onChange={this.onChange}
           type="text"
-          ref = {(input)=> this.type_id = input}
           // value = {this.state.type_id}
           >
 

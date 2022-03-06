@@ -247,8 +247,10 @@ app.post("/add-request", upload.any(), (req, res) => {
 /* Api to update Request */
 app.post("/update-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
       req.body.id && req.body.starttime) {
+
+        console.log(req.body)
 
       request.findById(req.body.id, (err, new_request) => {
 
@@ -267,8 +269,8 @@ app.post("/update-request", upload.any(), (req, res) => {
         if (req.body.desc) {
           new_request.desc = req.body.desc;
         }
-        if (req.body.type) {
-          new_request.type = req.body.type;
+        if (req.body.type_id) {
+          new_request.type_id = req.body.type_id;
         }
         if (req.body.starttime) {
           new_request.starttime = req.body.starttime;
