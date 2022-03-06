@@ -217,7 +217,7 @@ else{
 }
 }
 
-updateRequest = () => {
+editUser = () => {
   // const fileInput = document.querySelector("#fileInput");
   const file = new FormData();
   file.append('id', this.state.id);
@@ -227,7 +227,7 @@ updateRequest = () => {
   file.append('starttime', this.state.starttime);
   file.append('type', this.state.type);
   
-  axios.post('http://localhost:2000/update-request', file, {
+  axios.post('http://localhost:2000/edit-user', file, {
   headers: {
     'content-type': 'multipart/form-data',
     'token': this.state.token
@@ -241,7 +241,7 @@ updateRequest = () => {
   });
   
   this.handleRequestEditClose();
-  this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
+  this.setState({ fname: '', lname: '', age: '', email: '', username: '', password: '', phoneno: '', /*city: '', */role: '', page: 1 }, () => {
     this.getUser();
   });
 }).catch((err) => {
@@ -324,12 +324,24 @@ render() {
     id="standard-basic"
     type="text"
     autoComplete="off"
+    name="username"
+    value={this.state.username}
+    onChange={this.onChange}
+    placeholder="User Name"
+    // required
+    />
+    <br />
+    <TextField
+    id="standard-basic"
+    type="text"
+    autoComplete="off"
     name="fname"
     value={this.state.fname}
     onChange={this.onChange}
     placeholder="First Name"
     // required
-    /><br />
+    />
+    <br />
     <TextField
     id="standard-basic"
     type="text"
@@ -339,7 +351,8 @@ render() {
     onChange={this.onChange}
     placeholder="Last Name"
     // required
-    /><br />
+    />
+    <br />
     <TextField
     id="standard-basic"
     type="number"
@@ -347,69 +360,43 @@ render() {
     name="age"
     value={this.state.age}
     onChange={this.onChange}
-    placeholder="Age"
+    placeholder="Your Age"
     // required
-    /><br />
+    />
+    <br />
     <TextField
     id="standard-basic"
-    type="text" // Type email kuch hota h kya?
+    type="email"
     autoComplete="off"
     name="email"
     value={this.state.email}
     onChange={this.onChange}
     placeholder="Email"
     // required
-    /><br />
+    />
+    <br />
     <TextField
     id="standard-basic"
-    type="text"
-    autoComplete="off"
-    name="username"
-    value={this.state.username}
-    onChange={this.onChange}
-    placeholder="Username"
-    // required
-    /><br />
-    <TextField
-    id="standard-basic"
-    type="text" // text ya password type
-    autoComplete="off"
-    name="password"
-    value={this.state.password}
-    onChange={this.onChange}
-    placeholder="Password"
-    // required
-    /><br />
-    <TextField
-    id="standard-basic"
-    type="text"
+    type="tel"
     autoComplete="off"
     name="phoneno"
     value={this.state.phoneno}
     onChange={this.onChange}
     placeholder="Phone Number"
     // required
-    /><br />
+    />
+    <br />
     <TextField
     id="standard-basic"
-    type="text"
+    type="password"
     autoComplete="off"
-    name="city"
-    value={this.state.city}
+    name="password"
+    value={this.state.password}
     onChange={this.onChange}
-    placeholder="City"
+    placeholder="Password"
     // required
-    /><br />
-    <TextField
-    id="standard-basic"
-    type="number"
-    autoComplete="off"
-    name="role"
-    value={this.state.role}
-    onChange={this.onChange}
-    placeholder="Role"
-    // required
-    /><br /><br />
+    />
+    <br />
     </DialogContent>
     
     <DialogActions>
@@ -417,8 +404,8 @@ render() {
     Cancel
     </Button>
     <Button
-    disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
-    onClick={(e) => this.updateRequest()} color="primary" autoFocus>
+    // disabled={this.state.fname == '' || this.state.lname == '' || this.state.age == '' || this.state.email == '' || this.state.username == '' || this.state.password == '' || this.state.phoneno == '' || this.state.role == ''}
+    onClick={(e) => this.editUser()} color="primary" autoFocus>
     Edit User
     </Button>
     </DialogActions>
@@ -584,7 +571,7 @@ render() {
   <TableCell align="center">Age</TableCell>
   <TableCell align="center">Email</TableCell>
   <TableCell align="center">Phone Number</TableCell>
-  <TableCell align="center">City</TableCell>
+  {/* <TableCell align="center">City</TableCell> */}
   <TableCell align="center">Role</TableCell>
   <TableCell align="center">Action</TableCell>
   </TableRow>
@@ -602,8 +589,8 @@ render() {
   <TableCell align="center">{row.age}</TableCell>
   <TableCell align="center">{row.email}</TableCell>
   <TableCell align="center">{row.phoneno}</TableCell>
-  <TableCell align="center">{row.city}</TableCell>
-  <TableCell align="center">{row.role}</TableCell>
+  {/* <TableCell align="center">{row.city}</TableCell> */}
+  <TableCell align="center">{row.role == 0 ? "Admin" : ""}{row.role == 1 ? "Seeker" : ""}{row.role == 2 ? "Helper" : ""}</TableCell>
   <TableCell align="center">
   <Button
   className="button_style"
