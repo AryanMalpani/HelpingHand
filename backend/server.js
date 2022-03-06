@@ -203,13 +203,16 @@ function checkUserAndGenerateToken(data, req, res) {
 /* Api to add Request */
 app.post("/add-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type &&
+    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
       req.body.starttime) {
+
+        console.log(req.body);
+        console.log(req.user)
 
       let new_request = new request();
       new_request.title = req.body.title;
       new_request.desc = req.body.desc;
-      new_request.type = req.body.type;
+      new_request.type_id = req.body.type_id;
       // new_request.image = req.files[0].filename;
       new_request.starttime = req.body.starttime;
       new_request.seeker_id = req.user.id;
@@ -405,7 +408,7 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
         request.find(query).count()
           .then((count) => {
 
-            if (data && data.length > 0) {
+            if (data) {
               console.log(data)
               console.log(typesdata)
               res.status(200).json({
