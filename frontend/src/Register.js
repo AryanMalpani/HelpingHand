@@ -40,7 +40,7 @@ export default class Register extends React.Component {
     return (isValidPass)
   }
   validateAge = (age) => {
-    if(age>=0 && typeof(age)=== Number){
+    if(age>=0){
       return true
     }
     else{
