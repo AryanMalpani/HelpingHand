@@ -14,9 +14,9 @@ function Header_volunteer()   {
         <div className="header">
             {/* <button onClick={show} className='openbtn   '>&#9776;</button> */}
             <div className="link-div">
-                <a href="#">Accepted</a>
-                <a href="#">Completed</a>
-                <a href="#">History</a>
+                <a href="volunteerupcoming">Accepted</a>
+                <a href="volunteercompleted">Completed</a>
+                <a href="volunteerhistory">History</a>
                 {/* <a href="#">careers</a>
                 <a href="#">blog</a> */}
                 

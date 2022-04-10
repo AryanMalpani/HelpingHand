@@ -110,7 +110,7 @@ export default class VolunteerUpcoming extends Component {
         icon: "success",
         type: "success"
       });
- 
+
       this.setState({ page: 1 }, () => {
         this.pageChange(null, 1);
       });

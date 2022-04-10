@@ -382,16 +382,6 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
       ongoing: false
     });
 
-
-    // let new_type = new type();
-    //   new_type.typename = "Pick And Drop";
-
-    // new_type.save();
-
-
-    
-    
-
     if (req.query && req.query.search) {
       query["$and"].push({
         title: { $regex: req.query.search }
@@ -917,6 +907,64 @@ app.get("/seeker-get-history", (req, res) => {
       var page = req.query.page || 1;
       request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
         .skip((perPage * page) - perPage).limit(perPage)
+        .then((data) => {
+          request.find(query).count()
+            .then((count) => {
+  
+              if (data && data.length > 0) {
+                res.status(200).json({
+                  status: true,
+                  title: 'Request retrived.',
+                  requests: data,
+                  current_page: page,
+                  total: count,
+                  pages: Math.ceil(count / perPage),
+                });
+              } else {
+                res.status(400).json({
+                  errorMessage: 'There is no request!',
+                  status: false
+                });
+              }
+  
+            });
+  
+        }).catch(err => {
+          res.status(400).json({
+            errorMessage: err.message || err,
+            status: false
+          });
+        });
+    } catch (e) {
+      res.status(400).json({
+        errorMessage: 'Something went wrong!',
+        status: false
+      });
+    }
+  
+  });
+
+
+  // API to get vounteer history
+  app.get("/volunteer-get-history", (req, res) => {
+    try {
+      var query = {};
+      query["$and"] = [];
+      query["$and"].push({
+        // is_delete: false,
+        volunteer_id: req.user.id,
+        // volunteer_id: { $ne: null },
+        is_complete: true
+      });
+      if (req.query && req.query.search) {
+        query["$and"].push({
+          title: { $regex: req.query.search }
+        });
+      }
+      var perPage = 5;
+      var page = req.query.page || 1;
+      request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
+        .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id')
         .then((data) => {
           request.find(query).count()
             .then((count) => {
