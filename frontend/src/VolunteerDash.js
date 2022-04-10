@@ -4,9 +4,11 @@ import {
     DialogTitle, DialogContent, TableBody, Table,
     TableContainer, TableHead, TableRow, TableCell
 } from '@material-ui/core';
+import Header_volunteer from './components/Header_volunteer';
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 const axios = require('axios');
+
 
 export default class VolunteerDash extends Component {
     constructor() {
@@ -153,7 +155,11 @@ handleRequestEditClose = () => {
 };
 
 render() {
-    return (
+    return (<>
+      
+        <Header_volunteer/>
+      
+      
         
         <div>
         {this.state.loading && <LinearProgress size={40} />}
@@ -238,7 +244,7 @@ render() {
         <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
         </TableContainer>
         
-        </div>
+        </div></>
         );
     }
 }
