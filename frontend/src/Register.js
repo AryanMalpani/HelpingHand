@@ -23,7 +23,8 @@ export default class Register extends React.Component {
       lname:'',
       age:null,
       email:'',
-      phoneno:'' //tel
+      phoneno:'', //tel
+      city:''
 
     };
   }
@@ -62,7 +63,8 @@ export default class Register extends React.Component {
       lname:this.state.lname,
       age:this.state.age,
       email:this.state.email,
-      phoneno:this.state.phoneno
+      phoneno:this.state.phoneno,
+      city:this.state.city
     }).then((res) => {
       swal({
         text: res.data.title,
@@ -90,8 +92,7 @@ export default class Register extends React.Component {
     }
     if(this.validateAge(this.state.age)===false){
       alert("Age entered is not valid")
-    }
-    
+    }   
   }
   }
 
@@ -108,7 +109,7 @@ export default class Register extends React.Component {
           style={styles}
           type="number">
             <option value="" disabled selected hidden>
-              Select role
+              Select Role
             </option>
             <option value = "1">
               Seeker
@@ -117,6 +118,35 @@ export default class Register extends React.Component {
               Helper
             </option>
           </select>
+          <br /><br />
+
+          <select required name='city' id='selectCity'
+          onChange={this.onChange}
+          style={styles}
+          type="string">
+            <option value="" disabled selected hidden>
+              Select City
+            </option>
+            <option value = "1">
+              Banglore
+            </option>
+            <option value = "1">
+              Chennai
+            </option>
+            <option value = "2">
+              Hyderabad
+            </option>
+            <option value = "3">
+              Kolkata
+            </option>
+            <option value = "4">
+              Mumbai
+            </option>
+            <option value = "5">
+              New Delhi
+            </option>
+          </select>
+
           <br /><br />
           <TextField
             id="standard-basic"

@@ -379,6 +379,7 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
       seeker_id: req.user.id,
       volunteer_id: null,
       is_complete: false,
+      ongoing: false
     });
 
 
@@ -457,7 +458,8 @@ app.get("/seeker-get-accepted-request", (req, res) => {
       is_delete: false,
       seeker_id: req.user.id,
       volunteer_id: { $ne: null },
-      is_complete: false
+      is_complete: false,
+      ongoing: true
     });
     if (req.query && req.query.search) {
       query["$and"].push({
@@ -466,8 +468,8 @@ app.get("/seeker-get-accepted-request", (req, res) => {
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
-      .skip((perPage * page) - perPage).limit(perPage)
+    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
+      .skip((perPage * page) - perPage).limit(perPage).populate('volunteer_id').populate('type_id').sort({starttime: 1})
       .then((data) => {
         request.find(query).count()
           .then((count) => {
@@ -515,6 +517,7 @@ app.get("/seeker-get-deleted-request", (req, res) => {
       seeker_id: req.user.id,
       // volunteer_id: { $ne: null },
       // is_complete: false
+      is_delete: true
     });
     if (req.query && req.query.search) {
       query["$and"].push({
@@ -630,6 +633,7 @@ app.get("/volunteer-get-my-upcoming-request", (req, res) => {
     query["$and"].push({
       is_delete: false,
       is_complete: false,
+      ongoing: true,
       volunteer_id: req.user.id,
       starttime: { $gte: Date.now()}
 
@@ -803,7 +807,7 @@ app.listen(2000, () => {
 app.post("/accept-request", (req, res) => {
   try {
     if (req.body && req.body.id && req.user.id) {
-      request.findByIdAndUpdate(req.body.id, { volunteer_id: req.user.id }, { new: true }, (err, data) => {
+      request.findByIdAndUpdate(req.body.id, { volunteer_id: req.user.id, ongoing: true }, { new: true }, (err, data) => {
         if (data.volunteer_id != null) {
           res.status(200).json({
             status: true,
@@ -834,7 +838,7 @@ app.post("/accept-request", (req, res) => {
 app.post("/remove-volunteer-from-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      request.findByIdAndUpdate(req.body.id, { volunteer_id: null }, { new: true }, (err, data) => {
+      request.findByIdAndUpdate(req.body.id, { volunteer_id: null, ongoing: false }, { new: true }, (err, data) => {
         if (data.volunteer_id === null) {
           res.status(200).json({
             status: true,
@@ -890,3 +894,62 @@ app.post("/complete-request", (req, res) => {
     });
   }
 });
+
+
+// API to show history
+
+app.get("/seeker-get-history", (req, res) => {
+    try {
+      var query = {};
+      query["$and"] = [];
+      query["$and"].push({
+        // is_delete: false,
+        seeker_id: req.user.id,
+        volunteer_id: { $ne: null },
+        is_complete: true
+      });
+      if (req.query && req.query.search) {
+        query["$and"].push({
+          title: { $regex: req.query.search }
+        });
+      }
+      var perPage = 5;
+      var page = req.query.page || 1;
+      request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
+        .skip((perPage * page) - perPage).limit(perPage)
+        .then((data) => {
+          request.find(query).count()
+            .then((count) => {
+  
+              if (data && data.length > 0) {
+                res.status(200).json({
+                  status: true,
+                  title: 'Request retrived.',
+                  requests: data,
+                  current_page: page,
+                  total: count,
+                  pages: Math.ceil(count / perPage),
+                });
+              } else {
+                res.status(400).json({
+                  errorMessage: 'There is no request!',
+                  status: false
+                });
+              }
+  
+            });
+  
+        }).catch(err => {
+          res.status(400).json({
+            errorMessage: err.message || err,
+            status: false
+          });
+        });
+    } catch (e) {
+      res.status(400).json({
+        errorMessage: 'Something went wrong!',
+        status: false
+      });
+    }
+  
+  });

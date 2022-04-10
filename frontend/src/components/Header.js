@@ -14,9 +14,9 @@ function Header()   {
         <div className="header">
             {/* <button onClick={show} className='openbtn   '>&#9776;</button> */}
             <div className="link-div">
-                <a href="#">Accepted</a>
+                <a href="/seekeraccepted">Accepted</a>
                 <a href="/seekerdeleted">Deleted</a>
-                <a href="#">History</a>
+                <a href="/seekerhistory">History</a>
                 {/* <a href="#">careers</a>
                 <a href="#">blog</a> */}
                 

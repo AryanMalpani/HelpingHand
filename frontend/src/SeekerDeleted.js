@@ -225,19 +225,12 @@ export default class SeekerDeleted extends Component {
 
   render() {
     return (
+        
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
           <h2>Deleted Requests</h2>
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={this.handleRequestOpen}
-          >
-            Add Request
-          </Button>
+          
           <Button
             className="button_style"
             variant="contained"
@@ -248,173 +241,8 @@ export default class SeekerDeleted extends Component {
           </Button>
         </div>
 
-        {/* Edit Request */}
-        <Dialog
-          open={this.state.openRequestEditModal}
-          onClose={this.handleRequestClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Edit Request</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="title"
-              value={this.state.title}
-              onChange={this.onChange}
-              placeholder="Request title"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
-            {/* <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="price"
-              value={this.state.price}
-              onChange={this.onChange}
-              placeholder="Price"
-              required
-            /><br /> */}
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="type"
-              value={this.state.type}
-              onChange={this.onChange}
-              placeholder="Type"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="datetime-local"
-              autoComplete="off"
-              name="starttime"
-              value={this.state.starttime}
-              onChange={this.onChange}
-              placeholder="Start Time"
-              required
-            /><br /><br />
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={this.handleRequestEditClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
-              onClick={(e) => this.updateRequest()} color="primary" autoFocus>
-              Edit Request
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        {/* Add Request */}
-        <Dialog
-          open={this.state.openRequestModal}
-          onClose={this.handleRequestClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Add Request</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="title"
-              value={this.state.title}
-              onChange={this.onChange}
-              placeholder="Request title"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
-            {/* <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="price"
-              value={this.state.price}
-              onChange={this.onChange}
-              placeholder="Price"
-              required
-            /><br /> */}
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="type"
-              value={this.state.type}
-              onChange={this.onChange}
-              placeholder="Type"
-              required
-            /><br />
-            <TextField
-              id="standard-basic"
-              type="datetime-local"
-              autoComplete="off"
-              name="starttime"
-              value={this.state.starttime}
-              onChange={this.onChange}
-              placeholder="Start Time"
-              required
-            /><br /><br />
-            {/* <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                id="standard-basic"
-                type="file"
-                accept="image/*"
-                inputProps={{
-                  accept: "image/*"
-                }}
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-                required
-              />
-            </Button>&nbsp;
-            {this.state.fileName} */}
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={this.handleRequestClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              disabled={this.state.title == '' || this.state.desc == '' || this.state.starttime == '' || this.state.type == ''}
-              onClick={(e) => this.addRequest()} color="primary" autoFocus>
-              Add Request
-            </Button>
-          </DialogActions>
-        </Dialog>
-
+        
+        
         <br />
 
         <TableContainer>
@@ -450,15 +278,6 @@ export default class SeekerDeleted extends Component {
                   <TableCell align="center">{row.type_id.typename}</TableCell>
                   <TableCell align="center">{row.starttime}</TableCell>
                   <TableCell align="center">
-                    <Button
-                      className="button_style"
-                      variant="outlined"
-                      color="primary"
-                      size="small"
-                      onClick={(e) => this.handleRequestEditOpen(row)}
-                    >
-                      Edit
-                  </Button>
                     <Button
                       className="button_style"
                       variant="outlined"
