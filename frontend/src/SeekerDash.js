@@ -262,6 +262,15 @@ export default class SeekerDash extends Component {
             Log Out
           </Button>
         </div>
+        <div>
+    <table style={{width:"100%"}}>
+    <tr>
+        <td>4 Current requests</td>
+        <td>1 Accepted requests</td>
+        <td>1 Completed requests</td>
+    </tr>
+    </table>
+    </div>
 
         {/* Edit Request */}
         <Dialog

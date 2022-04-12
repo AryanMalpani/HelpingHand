@@ -5,6 +5,7 @@ import {
   TableContainer, TableHead, TableRow, TableCell
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import Header from './components/Header';
 import swal from 'sweetalert';
 const axios = require('axios');
 
@@ -224,7 +225,9 @@ export default class SeekerDeleted extends Component {
   };
 
   render() {
-    return (
+    return (<>
+      
+        <Header/>
         
       <div>
         {this.state.loading && <LinearProgress size={40} />}
@@ -296,7 +299,7 @@ export default class SeekerDeleted extends Component {
           <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
         </TableContainer>
 
-      </div>
+      </div></>
     );
   }
 }

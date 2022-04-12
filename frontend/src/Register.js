@@ -40,15 +40,23 @@ export default class Register extends React.Component {
     const isValidPass = validator.equals(pass, cpass)
     return (isValidPass)
   }
+  isStrongPass = (value) =>{
+    if(validator.isStrongPassword(value, {minLength:8, minLowercase:1, minUppercase:1,
+    minNumbers:1, minSymbols:1})){
+      return true
+    } else{
+      return false
+    }
+  }
   validateAge = (age) => {
-    if(age>=0){
+    if(age>=0 && typeof(age)=== Number){
       return true
     }
     else{
       return false
     }
   }
-
+ 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
   
   register = () => {
@@ -63,8 +71,7 @@ export default class Register extends React.Component {
       lname:this.state.lname,
       age:this.state.age,
       email:this.state.email,
-      phoneno:this.state.phoneno,
-      city:this.state.city
+      phoneno:this.state.phoneno
     }).then((res) => {
       swal({
         text: res.data.title,
@@ -91,8 +98,12 @@ export default class Register extends React.Component {
       alert("Password and Confirm password don't match")
     }
     if(this.validateAge(this.state.age)===false){
-      alert("Age entered is not valid")
-    }   
+      alert("Password too simple, your 8 character long password must include a small letter, a capital letter, a symbol and a number")
+    }
+    if(!this.isStrongPass(this.state.password)){
+      alert("Password too simple, your 8 character long password must include a small letter, a capital letter, a symbol and a number")
+    }
+    
   }
   }
 

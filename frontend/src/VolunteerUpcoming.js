@@ -5,6 +5,7 @@ import {
   TableContainer, TableHead, TableRow, TableCell
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import Header_volunteer from './components/Header_volunteer';
 import swal from 'sweetalert';
 const axios = require('axios');
  
@@ -145,81 +146,7 @@ export default class VolunteerUpcoming extends Component {
       });
     }
   };
- 
-//   addRequest = () => {
-//     // const fileInput = document.querySelector("#fileInput");
-//     const file = new FormData();
-//     // file.append('file', fileInput.files[0]);
-//     file.append('title', this.state.title);
-//     file.append('desc', this.state.desc);
-//     file.append('starttime', this.state.starttime);
-//     file.append('type', this.state.type);
- 
-//     axios.post('http://localhost:2000/add-request', file, {
-//       headers: {
-//         'content-type': 'multipart/form-data',
-//         'token': this.state.token
-//       }
-//     }).then((res) => {
- 
-//       swal({
-//         text: res.data.title,
-//         icon: "success",
-//         type: "success"
-//       });
- 
-//       this.handleRequestClose();
-//       this.setState({ title: '', desc: '', starttime: '', type: '', file: null, page: 1 }, () => {
-//         this.getRequest();
-//       });
-//     }).catch((err) => {
-//       swal({
-//         text: err.response.data.errorMessage,
-//         icon: "error",
-//         type: "error"
-//       });
-//       this.handleRequestClose();
-//     });
- 
-//   }
- 
-//   updateRequest = () => {
-//     const fileInput = document.querySelector("#fileInput");
-//     const file = new FormData();
-//     file.append('id', this.state.id);
-//     file.append('file', fileInput.files[0]);
-//     file.append('title', this.state.title);
-//     file.append('desc', this.state.desc);
-//     file.append('starttime', this.state.starttime);
-//     file.append('type', this.state.type);
- 
-//     axios.post('http://localhost:2000/update-request', file, {
-//       headers: {
-//         'content-type': 'multipart/form-data',
-//         'token': this.state.token
-//       }
-//     }).then((res) => {
- 
-//       swal({
-//         text: res.data.title,
-//         icon: "success",
-//         type: "success"
-//       });
- 
-//       this.handleRequestEditClose();
-//       this.setState({ title: '', desc: '', starttime: '', type: '', file: null }, () => {
-//         this.getRequest();
-//       });
-//     }).catch((err) => {
-//       swal({
-//         text: err.response.data.errorMessage,
-//         icon: "error",
-//         type: "error"
-//       });
-//       this.handleRequestEditClose();
-//     });
- 
-//   }
+
  
   handleRequestOpen = () => {
     this.setState({
@@ -256,7 +183,8 @@ export default class VolunteerUpcoming extends Component {
   };
  
   render() {
-    return (
+    return (<>
+        <Header_volunteer/>
       
       <div>
         {this.state.loading && <LinearProgress size={40} />}
@@ -364,7 +292,7 @@ export default class VolunteerUpcoming extends Component {
           <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
         </TableContainer>
  
-      </div>
+      </div></>
     );
   }
 }

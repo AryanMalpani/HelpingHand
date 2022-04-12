@@ -14,7 +14,6 @@ userSchema = new Schema( {
         type: Number,
         // required: true,
         // min: [40, 'too young lol'],
-        max: [169, 'how are you alive!']
     },
     email : {
         type: String,

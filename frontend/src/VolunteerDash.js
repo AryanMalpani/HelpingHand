@@ -185,6 +185,16 @@ render() {
     </div>
     
     
+    <div>
+    <table style={{width:"100%"}}>
+    <tr>
+        <td>2 Available requests</td>
+        <td>1 Accepted requests</td>
+        <td>1 Completed requests</td>
+    </tr>
+    </table>
+    </div>
+    
     
     <br />
     

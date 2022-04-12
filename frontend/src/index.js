@@ -15,7 +15,6 @@ import VolunteerDash from './VolunteerDash';
 import AdminRequests from './AdminRequests';
 import AdminDash from './AdminDash';
 import VolunteerUpcoming from './VolunteerUpcoming';
-import VolunteerCompleted from './VolunteerCompleted';
 import VolunteerHistory from './VolunteerHistory';
 
 ReactDOM.render(
@@ -30,7 +29,6 @@ ReactDOM.render(
             <Route path='/seekerhistory' component={SeekerHistory} />
             <Route path='/volunteerdash' component={VolunteerDash} />
             <Route path='/volunteerupcoming' component={VolunteerUpcoming} />
-            <Route path='/volunteercompleted' component={VolunteerCompleted} />
             <Route path='/volunteerhistory' component={VolunteerHistory} />
             <Route path='/adminrequests' component={AdminRequests} />
             <Route path='/admindash' component={AdminDash} />
