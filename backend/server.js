@@ -1,47 +1,53 @@
 var express = require("express");
 var app = express();
-const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
-var cors = require('cors');
-var multer = require('multer'),
-  bodyParser = require('body-parser'),
-  path = require('path');
+const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
+var cors = require("cors");
+var multer = require("multer"),
+  bodyParser = require("body-parser"),
+  path = require("path");
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/SEDB");
-var fs = require('fs');
+var fs = require("fs");
 var request = require("./model/request.js");
 var user = require("./model/user.js");
 var type = require("./model/type.js");
 const { getMaxListeners } = require("process");
 
-var dir = './uploads';
+var dir = "./uploads";
 var upload = multer({
   storage: multer.diskStorage({
-
     destination: function (req, file, callback) {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
-      callback(null, './uploads');
+      callback(null, "./uploads");
     },
-    filename: function (req, file, callback) { callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); }
-
+    filename: function (req, file, callback) {
+      callback(
+        null,
+        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+      );
+    },
   }),
 
   fileFilter: function (req, file, callback) {
-    var ext = path.extname(file.originalname)
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-      return callback(/*res.end('Only images are allowed')*/ null, false)
+    var ext = path.extname(file.originalname);
+    if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+      return callback(/*res.end('Only images are allowed')*/ null, false);
     }
-    callback(null, true)
-  }
+    callback(null, true);
+  },
 });
 app.use(cors());
-app.use(express.static('uploads'));
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: false
-}));
+app.use(express.static("uploads"));
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(
+  bodyParser.urlencoded({
+    // to support URL-encoded bodies
+    extended: false,
+  })
+);
 
 // const swaggerUi = require('swagger-ui-express');
 // const swaggerDocument = require('./swagger.json');
@@ -54,30 +60,30 @@ app.use("/", (req, res, next) => {
       next();
     } else {
       /* decode jwt token if authorized*/
-      jwt.verify(req.headers.token, 'shhhhh11111', function (err, decoded) {
+      jwt.verify(req.headers.token, "shhhhh11111", function (err, decoded) {
         if (decoded && decoded.user) {
           req.user = decoded;
           next();
         } else {
           return res.status(401).json({
-            errorMessage: 'User unauthorized!',
-            status: false
+            errorMessage: "User unauthorized!",
+            status: false,
           });
         }
-      })
+      });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-})
+});
 
 app.get("/", (req, res) => {
   res.status(200).json({
     status: true,
-    title: 'Apis'
+    title: "Apis",
   });
 });
 
@@ -87,7 +93,6 @@ app.post("/login", (req, res) => {
     if (req.body && req.body.username && req.body.password) {
       user.find({ username: req.body.username }, (err, data) => {
         if (data.length > 0) {
-
           // console.log(data);
           // console.log(data.password);
           // console.log(data[0]);
@@ -96,45 +101,49 @@ app.post("/login", (req, res) => {
           if (bcrypt.compareSync(data[0].password, req.body.password)) {
             checkUserAndGenerateToken(data[0], req, res);
           } else {
-
             res.status(400).json({
-              errorMessage: 'Username or password is incorrect!',
-              status: false
+              errorMessage: "Username or password is incorrect!",
+              status: false,
             });
           }
-
         } else {
           res.status(400).json({
-            errorMessage: 'Username or password is incorrect!',
-            status: false
+            errorMessage: "Username or password is incorrect!",
+            status: false,
           });
         }
-      })
+      });
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /* register api */
 app.post("/register", (req, res) => {
   try {
-    console.log(req.body)
-    if (req.body && req.body.username && req.body.password && req.body.role && req.body.fname && req.body.lname && req.body.age && req.body.email && req.body.phoneno) {
-
+    console.log(req.body);
+    if (
+      req.body &&
+      req.body.username &&
+      req.body.password &&
+      req.body.role &&
+      req.body.fname &&
+      req.body.lname &&
+      req.body.age &&
+      req.body.email &&
+      req.body.phoneno
+    ) {
       user.find({ username: req.body.username }, (err, data) => {
-
         if (data.length == 0) {
-
           let User = new user({
             username: req.body.username,
             password: req.body.password,
@@ -143,71 +152,78 @@ app.post("/register", (req, res) => {
             lname: req.body.lname,
             age: req.body.age,
             email: req.body.email,
-            phoneno: req.body.phoneno
+            phoneno: req.body.phoneno,
           });
           User.save((err, data) => {
             if (err) {
               res.status(400).json({
                 errorMessage: err,
-                status: false
+                status: false,
               });
             } else {
               res.status(200).json({
                 status: true,
-                title: 'Registered Successfully.'
+                title: "Registered Successfully.",
               });
             }
           });
-
         } else {
           res.status(400).json({
             errorMessage: `UserName ${req.body.username} Already Exist!`,
-            status: false
+            status: false,
           });
         }
-
       });
-
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
 
 function checkUserAndGenerateToken(data, req, res) {
-  jwt.sign({ user: data.username, id: data._id }, 'shhhhh11111', { expiresIn: '1d' }, (err, token) => {
-    if (err) {
-      res.status(400).json({
-        status: false,
-        errorMessage: err,
-      });
-    } else {
-      res.json({
-        message: 'Login Successfully.',
-        token: token,
-        role: data.role,
-        status: true
-      });
+  jwt.sign(
+    { user: data.username, id: data._id },
+    "shhhhh11111",
+    { expiresIn: "1d" },
+    (err, token) => {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          errorMessage: err,
+        });
+      } else {
+        res.json({
+          message: "Login Successfully.",
+          token: token,
+          role: data.role,
+          status: true,
+        });
+      }
     }
-  });
+  );
 }
 
 /* Api to add Request */
 app.post("/add-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
-      req.body.starttime) {
-
-        console.log(req.body);
-        console.log(req.user)
+    if (
+      req.files &&
+      req.body &&
+      req.body.title &&
+      req.body.desc &&
+      req.body.type_id &&
+      req.body.starttime
+    ) {
+      console.log(req.body);
+      console.log(req.user);
 
       let new_request = new request();
       new_request.title = req.body.title;
@@ -220,26 +236,25 @@ app.post("/add-request", upload.any(), (req, res) => {
         if (err) {
           res.status(400).json({
             errorMessage: err,
-            status: false
+            status: false,
           });
         } else {
           res.status(200).json({
             status: true,
-            title: 'Request Added successfully.'
+            title: "Request Added successfully.",
           });
         }
       });
-
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -247,15 +262,25 @@ app.post("/add-request", upload.any(), (req, res) => {
 /* Api to update Request */
 app.post("/update-request", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.title && req.body.desc && req.body.type_id &&
-      req.body.id && req.body.starttime) {
-
-        console.log(req.body)
+    if (
+      req.files &&
+      req.body &&
+      req.body.title &&
+      req.body.desc &&
+      req.body.type_id &&
+      req.body.id &&
+      req.body.starttime
+    ) {
+      console.log(req.body);
 
       request.findById(req.body.id, (err, new_request) => {
-
         // if file already exist than remove it
-        if (req.files && req.files[0] && req.files[0].filename && new_request.image) {
+        if (
+          req.files &&
+          req.files[0] &&
+          req.files[0].filename &&
+          new_request.image
+        ) {
           var path = `./uploads/${new_request.image}`;
           fs.unlinkSync(path);
         }
@@ -280,28 +305,26 @@ app.post("/update-request", upload.any(), (req, res) => {
           if (err) {
             res.status(400).json({
               errorMessage: err,
-              status: false
+              status: false,
             });
           } else {
             res.status(200).json({
               status: true,
-              title: 'Request updated.'
+              title: "Request updated.",
             });
           }
         });
-
       });
-
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -310,29 +333,34 @@ app.post("/update-request", upload.any(), (req, res) => {
 app.post("/delete-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      request.findByIdAndUpdate(req.body.id, { is_delete: true }, { new: true }, (err, data) => {
-        if (data.is_delete) {
-          res.status(200).json({
-            status: true,
-            title: 'Request deleted.'
-          });
-        } else {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
+      request.findByIdAndUpdate(
+        req.body.id,
+        { is_delete: true },
+        { new: true },
+        (err, data) => {
+          if (data.is_delete) {
+            res.status(200).json({
+              status: true,
+              title: "Request deleted.",
+            });
+          } else {
+            res.status(400).json({
+              errorMessage: err,
+              status: false,
+            });
+          }
         }
-      });
+      );
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -341,30 +369,34 @@ app.post("/delete-request", (req, res) => {
 app.post("/revive-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      request.findByIdAndUpdate(req.body.id, { is_delete: false }, { new: true }, (err, data) => {
-        if (data.is_delete) {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
-        } else {
-          res.status(200).json({
-            status: true,
-            title: 'Request revived.'
-          });
-          
+      request.findByIdAndUpdate(
+        req.body.id,
+        { is_delete: false },
+        { new: true },
+        (err, data) => {
+          if (data.is_delete) {
+            res.status(400).json({
+              errorMessage: err,
+              status: false,
+            });
+          } else {
+            res.status(200).json({
+              status: true,
+              title: "Request revived.",
+            });
+          }
         }
-      });
+      );
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -379,64 +411,61 @@ app.get("/seeker-get-unaccepted-request", (req, res) => {
       seeker_id: req.user.id,
       volunteer_id: null,
       is_complete: false,
-      ongoing: false
+      ongoing: false,
     });
 
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
 
-    type.find()
-    .then((typesdata) =>{
-      
-    
-
-    var perPage = 5;
-    var page = req.query.page || 1;
-    request.find(query, {type: 0})
-      .skip((perPage * page) - perPage).limit(perPage).populate('type_id')
-      .then((data) => {
-        request.find(query).count()
-          .then((count) => {
-
-            if (data) {
-              console.log(data)
-              console.log(typesdata)
-              res.status(200).json({
-                status: true,
-                title: 'Request retrived.',
-                requests: data,
-                types: typesdata,
-                current_page: page,
-                total: count,
-                pages: Math.ceil(count / perPage),
-              });
-            } else {
-              res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
-              });
-            }
-
+    type.find().then((typesdata) => {
+      var perPage = 5;
+      var page = req.query.page || 1;
+      request
+        .find(query, { type: 0 })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .populate("type_id")
+        .then((data) => {
+          request
+            .find(query)
+            .count()
+            .then((count) => {
+              if (data) {
+                console.log(data);
+                console.log(typesdata);
+                res.status(200).json({
+                  status: true,
+                  title: "Request retrived.",
+                  requests: data,
+                  types: typesdata,
+                  current_page: page,
+                  total: count,
+                  pages: Math.ceil(count / perPage),
+                });
+              } else {
+                res.status(400).json({
+                  errorMessage: "There is no request!",
+                  status: false,
+                });
+              }
+            });
+        })
+        .catch((err) => {
+          res.status(400).json({
+            errorMessage: err.message || err,
+            status: false,
           });
-
-      }).catch(err => {
-        res.status(400).json({
-          errorMessage: err.message || err,
-          status: false
         });
-      });
-
     });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /*Api to get and search accepted request with pagination and search by title for seeker*/
@@ -449,25 +478,39 @@ app.get("/seeker-get-accepted-request", (req, res) => {
       seeker_id: req.user.id,
       volunteer_id: { $ne: null },
       is_complete: false,
-      ongoing: true
+      ongoing: true,
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('volunteer_id').populate('type_id').sort({starttime: 1})
+    request
+      .find(query, {
+        date: 1,
+        title: 1,
+        id: 1,
+        desc: 1,
+        type_id: 1,
+        starttime: 1,
+        seeker_id: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("volunteer_id")
+      .populate("type_id")
+      .sort({ starttime: 1 })
       .then((data) => {
-        request.find(query).count()
+        request
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
               res.status(200).json({
                 status: true,
-                title: 'Request retrived.',
+                title: "Request retrived.",
                 requests: data,
                 current_page: page,
                 total: count,
@@ -475,26 +518,24 @@ app.get("/seeker-get-accepted-request", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
+                errorMessage: "There is no request!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /*Api to get and search deleted request with pagination and search by title for seeker*/
@@ -507,26 +548,32 @@ app.get("/seeker-get-deleted-request", (req, res) => {
       seeker_id: req.user.id,
       // volunteer_id: { $ne: null },
       // is_complete: false
-      is_delete: true
+      is_delete: true,
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, {})
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').populate('volunteer_id')
+    request
+      .find(query, {})
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("seeker_id")
+      .populate("type_id")
+      .populate("volunteer_id")
       .then((data) => {
-        request.find(query).count()
+        request
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
-              console.log(data)
+              console.log(data);
               res.status(200).json({
                 status: true,
-                title: 'Request retrived.',
+                title: "Request retrived.",
                 requests: data,
                 current_page: page,
                 total: count,
@@ -534,28 +581,25 @@ app.get("/seeker-get-deleted-request", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
+                errorMessage: "There is no request!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
-
 
 /*Api to get and search request with pagination and search by title for volunteer*/
 app.get("/volunteer-get-request", (req, res) => {
@@ -565,27 +609,41 @@ app.get("/volunteer-get-request", (req, res) => {
     query["$and"].push({
       is_delete: false,
       is_complete: false,
-      volunteer_id: null
+      volunteer_id: null,
       // seeker_id: req.user.id
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id').sort({starttime: 1})
+    request
+      .find(query, {
+        date: 1,
+        title: 1,
+        id: 1,
+        desc: 1,
+        type_id: 1,
+        starttime: 1,
+        seeker_id: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("seeker_id")
+      .populate("type_id")
+      .sort({ starttime: 1 })
       .then((data) => {
-        request.find(query).count()
+        request
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
-              console.log(data)
+              console.log(data);
               res.status(200).json({
                 status: true,
-                title: 'Request retrived.',
+                title: "Request retrived.",
                 requests: data,
                 current_page: page,
                 total: count,
@@ -593,26 +651,25 @@ app.get("/volunteer-get-request", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
+                errorMessage: "There is no request!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
+    console.log(e);
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /*Api to get and search upcoming requests for that volunteers with pagination and search by title for volunteer*/
@@ -625,29 +682,42 @@ app.get("/volunteer-get-my-upcoming-request", (req, res) => {
       is_complete: false,
       ongoing: true,
       volunteer_id: req.user.id,
-      starttime: { $gte: Date.now()}
+      // starttime: { $gte: Date.now() },
 
       // seeker_id: req.user.id
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, { date: 1, title: 1, id: 1, desc: 1, type_id: 1, starttime: 1, seeker_id: 1 })
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id')
-      .sort({starttime: 1})
+    request
+      .find(query, {
+        date: 1,
+        title: 1,
+        id: 1,
+        desc: 1,
+        type_id: 1,
+        starttime: 1,
+        seeker_id: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("seeker_id")
+      .populate("type_id")
+      .sort({ starttime: 1 })
       .then((data) => {
-        request.find(query).count()
+        request
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
-              console.log(data)
+              console.log(data);
               res.status(200).json({
                 status: true,
-                title: 'Request retrived.',
+                title: "Request retrived.",
                 requests: data,
                 current_page: page,
                 total: count,
@@ -655,26 +725,24 @@ app.get("/volunteer-get-my-upcoming-request", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
+                errorMessage: "There is no request!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /*Api to get and search request with pagination and search by title for admin*/
@@ -688,22 +756,28 @@ app.get("/admin-get-request", (req, res) => {
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    request.find(query, {})
-      .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('volunteer_id')
+    request
+      .find(query, {})
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("seeker_id")
+      .populate("volunteer_id")
+      .populate("type_id")
       .then((data) => {
-        request.find(query).count()
+        request
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
-              console.log(data)
+              console.log(data);
               res.status(200).json({
                 status: true,
-                title: 'Request retrived.',
+                title: "Request retrived.",
                 requests: data,
                 current_page: page,
                 total: count,
@@ -711,26 +785,24 @@ app.get("/admin-get-request", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no request!',
-                status: false
+                errorMessage: "There is no request!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 /*Api to get and search users with pagination and search by title for admin*/
@@ -743,22 +815,34 @@ app.get("/admin-get-user", (req, res) => {
     });
     if (req.query && req.query.search) {
       query["$and"].push({
-        title: { $regex: req.query.search }
+        title: { $regex: req.query.search },
       });
     }
     var perPage = 5;
     var page = req.query.page || 1;
-    user.find(query, {fname: 1, lname: 1, age: 1, email: 1, username: 1, phoneno: 1, city: 1, role: 1})
-      .skip((perPage * page) - perPage).limit(perPage)
+    user
+      .find(query, {
+        fname: 1,
+        lname: 1,
+        age: 1,
+        email: 1,
+        username: 1,
+        phoneno: 1,
+        city: 1,
+        role: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
       .then((data) => {
-        user.find(query).count()
+        user
+          .find(query)
+          .count()
           .then((count) => {
-
             if (data && data.length > 0) {
-              console.log(data)
+              console.log(data);
               res.status(200).json({
                 status: true,
-                title: 'user retrived.',
+                title: "user retrived.",
                 users: data,
                 current_page: page,
                 total: count,
@@ -766,60 +850,62 @@ app.get("/admin-get-user", (req, res) => {
               });
             } else {
               res.status(400).json({
-                errorMessage: 'There is no user!',
-                status: false
+                errorMessage: "There is no user!",
+                status: false,
               });
             }
-
           });
-
-      }).catch(err => {
+      })
+      .catch((err) => {
         res.status(400).json({
           errorMessage: err.message || err,
-          status: false
+          status: false,
         });
       });
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
-
 });
 
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
 });
 
-
 /* Api to accept Request */
 app.post("/accept-request", (req, res) => {
   try {
     if (req.body && req.body.id && req.user.id) {
-      request.findByIdAndUpdate(req.body.id, { volunteer_id: req.user.id, ongoing: true }, { new: true }, (err, data) => {
-        if (data.volunteer_id != null) {
-          res.status(200).json({
-            status: true,
-            title: 'Request accepted.'
-          });
-        } else {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
+      request.findByIdAndUpdate(
+        req.body.id,
+        { volunteer_id: req.user.id, ongoing: true },
+        { new: true },
+        (err, data) => {
+          if (data.volunteer_id != null) {
+            res.status(200).json({
+              status: true,
+              title: "Request accepted.",
+            });
+          } else {
+            res.status(400).json({
+              errorMessage: err,
+              status: false,
+            });
+          }
         }
-      });
+      );
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -828,29 +914,34 @@ app.post("/accept-request", (req, res) => {
 app.post("/remove-volunteer-from-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      request.findByIdAndUpdate(req.body.id, { volunteer_id: null, ongoing: false }, { new: true }, (err, data) => {
-        if (data.volunteer_id === null) {
-          res.status(200).json({
-            status: true,
-            title: 'Request deleted.'
-          });
-        } else {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
+      request.findByIdAndUpdate(
+        req.body.id,
+        { volunteer_id: null, ongoing: false },
+        { new: true },
+        (err, data) => {
+          if (data.volunteer_id === null) {
+            res.status(200).json({
+              status: true,
+              title: "Request deleted.",
+            });
+          } else {
+            res.status(400).json({
+              errorMessage: err,
+              status: false,
+            });
+          }
         }
-      });
+      );
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
@@ -858,146 +949,171 @@ app.post("/remove-volunteer-from-request", (req, res) => {
 app.post("/complete-request", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      request.findByIdAndUpdate(req.body.id, { is_complete: true }, { new: true }, (err, data) => {
-        if (data.is_complete) {
-          res.status(200).json({
-            status: true,
-            title: 'Request completed.'
-          });
-        } else {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
+      request.findByIdAndUpdate(
+        req.body.id,
+        { is_complete: true },
+        { new: true },
+        (err, data) => {
+          if (data.is_complete) {
+            res.status(200).json({
+              status: true,
+              title: "Request completed.",
+            });
+          } else {
+            res.status(400).json({
+              errorMessage: err,
+              status: false,
+            });
+          }
         }
-      });
+      );
     } else {
       res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
+        errorMessage: "Add proper parameter first!",
+        status: false,
       });
     }
   } catch (e) {
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
+      errorMessage: "Something went wrong!",
+      status: false,
     });
   }
 });
 
-
 // API to show history
 
 app.get("/seeker-get-history", (req, res) => {
-    try {
-      var query = {};
-      query["$and"] = [];
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      // is_delete: false,
+      seeker_id: req.user.id,
+      volunteer_id: { $ne: null },
+      is_complete: true,
+    });
+    if (req.query && req.query.search) {
       query["$and"].push({
-        // is_delete: false,
-        seeker_id: req.user.id,
-        volunteer_id: { $ne: null },
-        is_complete: true
-      });
-      if (req.query && req.query.search) {
-        query["$and"].push({
-          title: { $regex: req.query.search }
-        });
-      }
-      var perPage = 5;
-      var page = req.query.page || 1;
-      request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
-        .skip((perPage * page) - perPage).limit(perPage)
-        .then((data) => {
-          request.find(query).count()
-            .then((count) => {
-  
-              if (data && data.length > 0) {
-                res.status(200).json({
-                  status: true,
-                  title: 'Request retrived.',
-                  requests: data,
-                  current_page: page,
-                  total: count,
-                  pages: Math.ceil(count / perPage),
-                });
-              } else {
-                res.status(400).json({
-                  errorMessage: 'There is no request!',
-                  status: false
-                });
-              }
-  
-            });
-  
-        }).catch(err => {
-          res.status(400).json({
-            errorMessage: err.message || err,
-            status: false
-          });
-        });
-    } catch (e) {
-      res.status(400).json({
-        errorMessage: 'Something went wrong!',
-        status: false
+        title: { $regex: req.query.search },
       });
     }
-  
-  });
-
-
-  // API to get vounteer history
-  app.get("/volunteer-get-history", (req, res) => {
-    try {
-      var query = {};
-      query["$and"] = [];
-      query["$and"].push({
-        // is_delete: false,
-        volunteer_id: req.user.id,
-        // volunteer_id: { $ne: null },
-        is_complete: true
-      });
-      if (req.query && req.query.search) {
-        query["$and"].push({
-          title: { $regex: req.query.search }
-        });
-      }
-      var perPage = 5;
-      var page = req.query.page || 1;
-      request.find(query, { date: 1, title: 1, id: 1, desc: 1, type: 1, starttime: 1, image: 1 })
-        .skip((perPage * page) - perPage).limit(perPage).populate('seeker_id').populate('type_id')
-        .then((data) => {
-          request.find(query).count()
-            .then((count) => {
-  
-              if (data && data.length > 0) {
-                res.status(200).json({
-                  status: true,
-                  title: 'Request retrived.',
-                  requests: data,
-                  current_page: page,
-                  total: count,
-                  pages: Math.ceil(count / perPage),
-                });
-              } else {
-                res.status(400).json({
-                  errorMessage: 'There is no request!',
-                  status: false
-                });
-              }
-  
-            });
-  
-        }).catch(err => {
-          res.status(400).json({
-            errorMessage: err.message || err,
-            status: false
+    var perPage = 5;
+    var page = req.query.page || 1;
+    request
+      .find(query, {
+        date: 1,
+        title: 1,
+        id: 1,
+        desc: 1,
+        type: 1,
+        starttime: 1,
+        image: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("volunteer_id")
+      .populate("type_id")
+      .then((data) => {
+        request
+          .find(query)
+          .count()
+          .then((count) => {
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: "Request retrived.",
+                requests: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: "There is no request!",
+                status: false,
+              });
+            }
           });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false,
         });
-    } catch (e) {
-      res.status(400).json({
-        errorMessage: 'Something went wrong!',
-        status: false
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: "Something went wrong!",
+      status: false,
+    });
+  }
+});
+
+// API to get vounteer history
+app.get("/volunteer-get-history", (req, res) => {
+  try {
+    var query = {};
+    query["$and"] = [];
+    query["$and"].push({
+      // is_delete: false,
+      volunteer_id: req.user.id,
+      // volunteer_id: { $ne: null },
+      is_complete: true,
+    });
+    if (req.query && req.query.search) {
+      query["$and"].push({
+        title: { $regex: req.query.search },
       });
     }
-  
-  });
+    var perPage = 5;
+    var page = req.query.page || 1;
+    request
+      .find(query, {
+        date: 1,
+        title: 1,
+        id: 1,
+        desc: 1,
+        type: 1,
+        starttime: 1,
+        image: 1,
+      })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("seeker_id")
+      .populate("type_id")
+      .then((data) => {
+        request
+          .find(query)
+          .count()
+          .then((count) => {
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: "Request retrived.",
+                requests: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: "There is no request!",
+                status: false,
+              });
+            }
+          });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false,
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: "Something went wrong!",
+      status: false,
+    });
+  }
+});
